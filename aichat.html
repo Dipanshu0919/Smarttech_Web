@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>AI Chat | SmarTech Solutions</title>
+    <meta name="description" content="Chat with the SmarTech Solutions AI assistant for company, services, and project details.">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        try {
+            if (window.self !== window.top || new URLSearchParams(window.location.search).get('embed') === '1') {
+                document.documentElement.classList.add('is-embedded');
+            }
+        } catch (e) {
+            document.documentElement.classList.add('is-embedded');
+        }
+    </script>
+    <style>
+        :root {
+            --green-dark: #0f381c;
+            --green-main: #228b22;
+            --green-light: #4cbb17;
+            --green-accent: #a3e4d7;
+            --white: #ffffff;
+            --text-dark: #23302a;
+            --text-soft: #5e6c66;
+            --bg-light: #f4f9f4;
+            --surface: #ffffff;
+            --surface-alt: #f7fcf7;
+            --border: rgba(34, 139, 34, 0.14);
+            --shadow: 0 16px 40px rgba(15, 56, 28, 0.1);
+            --user-bubble: linear-gradient(135deg, #166b31, #25963b);
+            --assistant-bubble: #eff8ef;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
+            font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(76, 187, 23, 0.12), transparent 30%),
+                radial-gradient(circle at bottom right, rgba(15, 56, 28, 0.08), transparent 28%),
+                linear-gradient(180deg, #f8fdf8 0%, var(--bg-light) 100%);
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 1.25rem 1.5rem;
+            width: 100%;
+            max-width: 1040px;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+
+        .home-row {
+            width: 100%;
+            margin-bottom: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .home-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.65rem 1.15rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--green-dark);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.92rem;
+            border: 1px solid rgba(34, 139, 34, 0.18);
+            box-shadow: 0 4px 14px rgba(15, 56, 28, 0.06);
+            transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .home-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+
+        .home-btn:hover {
+            transform: translateY(-1px);
+            background: #ffffff;
+            box-shadow: 0 8px 18px rgba(15, 56, 28, 0.1);
+        }
+
+        .new-chat-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.65rem 1.15rem;
+            border-radius: 999px;
+            background: linear-gradient(135deg, var(--green-main), var(--green-light));
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.92rem;
+            border: 1px solid rgba(34, 139, 34, 0.16);
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(15, 56, 28, 0.14);
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .new-chat-btn svg {
+            width: 15px;
+            height: 15px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+
+        .new-chat-btn:hover {
+            transform: translateY(-1px);
+            opacity: 0.95;
+        }
+
+        .chat-page {
+            width: 100%;
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-shell {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+            overflow: hidden;
+        }
+
+        /* Top subheader for standalone page */
+        .chat-header-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.85rem 1.25rem;
+            background: linear-gradient(135deg, rgba(15, 56, 28, 0.96), rgba(34, 139, 34, 0.92));
+            color: #ffffff;
+            flex-shrink: 0;
+        }
+
+        .chat-header-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .chat-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1rem;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+        }
+
+        .chat-header-text strong {
+            display: block;
+            font-size: 0.96rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+        }
+
+        .chat-header-text span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.76rem;
+            opacity: 0.9;
+        }
+
+        .chat-header-text span::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #4cbb17;
+            box-shadow: 0 0 0 3px rgba(76, 187, 23, 0.25);
+        }
+
+        .chat-stream {
+            flex: 1;
+            min-height: 0;
+            padding: 1.15rem;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background:
+                radial-gradient(circle at top right, rgba(76, 187, 23, 0.05), transparent 22%),
+                linear-gradient(180deg, #fcfffc 0%, #f7fcf7 100%);
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 0.85rem;
+            animation: rise 0.22s ease-out both;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.assistant {
+            justify-content: flex-start;
+        }
+
+        .bubble {
+            max-width: min(86%, 640px);
+            padding: 0.85rem 1.05rem;
+            border-radius: 18px;
+            box-shadow: 0 4px 14px rgba(15, 56, 28, 0.06);
+            line-height: 1.6;
+            font-size: 0.95rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .message.user .bubble {
+            background: var(--user-bubble);
+            color: var(--white);
+            border-bottom-right-radius: 4px;
+            white-space: pre-wrap;
+        }
+
+        .message.assistant .bubble {
+            background: var(--assistant-bubble);
+            color: var(--text-dark);
+            border: 1px solid rgba(34, 139, 34, 0.1);
+            border-bottom-left-radius: 4px;
+            white-space: normal;
+        }
+
+        .bubble p {
+            margin: 0 0 0.55rem 0;
+            line-height: 1.58;
+        }
+
+        .bubble p:last-child {
+            margin-bottom: 0;
+        }
+
+        .bubble h1,
+        .bubble h2,
+        .bubble h3,
+        .bubble h4,
+        .bubble h5 {
+            color: var(--green-dark);
+            margin: 0.85rem 0 0.35rem 0;
+            font-weight: 700;
+            line-height: 1.35;
+        }
+
+        .bubble h1:first-child,
+        .bubble h2:first-child,
+        .bubble h3:first-child,
+        .bubble h4:first-child,
+        .bubble h5:first-child {
+            margin-top: 0;
+        }
+
+        .bubble h1 { font-size: 1.15rem; }
+        .bubble h2 { font-size: 1.08rem; }
+        .bubble h3 { font-size: 1.02rem; }
+        .bubble h4 { font-size: 0.96rem; }
+        .bubble h5 { font-size: 0.92rem; }
+
+        .bubble strong,
+        .bubble b {
+            font-weight: 700;
+            color: inherit;
+        }
+
+        .bubble em,
+        .bubble i {
+            font-style: italic;
+        }
+
+        .bubble ul,
+        .bubble ol {
+            margin: 0.35rem 0 0.65rem 0;
+            padding-left: 1.25rem;
+        }
+
+        .bubble li {
+            margin-bottom: 0.3rem;
+            line-height: 1.5;
+        }
+
+        .bubble li:last-child {
+            margin-bottom: 0;
+        }
+
+        .bubble hr {
+            border: 0;
+            border-top: 1px solid rgba(34, 139, 34, 0.18);
+            margin: 0.75rem 0;
+        }
+
+        .bubble a {
+            color: var(--green-main);
+            text-decoration: underline;
+            word-break: break-all;
+        }
+
+        .bubble a:hover {
+            color: var(--green-dark);
+        }
+
+        .bubble code {
+            background: rgba(15, 56, 28, 0.08);
+            padding: 0.15rem 0.35rem;
+            border-radius: 5px;
+            font-family: Consolas, Monaco, "Courier New", monospace;
+            font-size: 0.88em;
+            color: #0f381c;
+        }
+
+        .bubble pre {
+            background: rgba(15, 56, 28, 0.06);
+            padding: 0.75rem 0.9rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 0.6rem 0;
+            border: 1px solid rgba(34, 139, 34, 0.12);
+        }
+
+        .bubble pre code {
+            background: transparent;
+            padding: 0;
+        }
+
+        .bubble blockquote {
+            margin: 0.6rem 0;
+            padding: 0.4rem 0.85rem;
+            border-left: 3px solid var(--green-main);
+            background: rgba(34, 139, 34, 0.05);
+            border-radius: 0 8px 8px 0;
+            color: #2c4234;
+        }
+
+        .suggestion-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            margin-top: 0.75rem;
+        }
+
+        .suggestion-pill {
+            background: #ffffff;
+            border: 1px solid rgba(34, 139, 34, 0.28);
+            border-radius: 999px;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.82rem;
+            color: var(--green-dark);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.18s ease;
+            text-align: left;
+            box-shadow: 0 2px 6px rgba(15, 56, 28, 0.05);
+            font-family: inherit;
+        }
+
+        .suggestion-pill:hover,
+        .suggestion-pill:focus-visible {
+            background: var(--green-main);
+            color: #ffffff;
+            border-color: var(--green-main);
+            transform: translateY(-1px);
+        }
+
+        .composer {
+            padding: 0.85rem 1rem;
+            border-top: 1px solid rgba(34, 139, 34, 0.12);
+            background: #ffffff;
+            flex-shrink: 0;
+        }
+
+        .composer form {
+            display: flex;
+            gap: 0.65rem;
+            align-items: flex-end;
+        }
+
+        .composer textarea {
+            flex: 1;
+            min-width: 0;
+            height: 48px;
+            min-height: 48px;
+            max-height: 120px;
+            resize: none;
+            border-radius: 16px;
+            border: 1px solid rgba(34, 139, 34, 0.22);
+            padding: 0.75rem 0.95rem;
+            font: inherit;
+            font-size: 16px; /* Prevents auto-zoom on iOS */
+            color: var(--text-dark);
+            background: #fbfffb;
+            outline: none;
+            box-shadow: inset 0 1px 2px rgba(15, 56, 28, 0.04);
+            line-height: 1.4;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .composer textarea:focus {
+            border-color: var(--green-main);
+            box-shadow: 0 0 0 3px rgba(34, 139, 34, 0.12);
+        }
+
+        .composer button {
+            border: 0;
+            border-radius: 16px;
+            width: 48px;
+            height: 48px;
+            flex: 0 0 48px;
+            background: linear-gradient(135deg, var(--green-main), var(--green-light));
+            color: var(--white);
+            cursor: pointer;
+            box-shadow: 0 8px 18px rgba(34, 139, 34, 0.2);
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            display: grid;
+            place-items: center;
+            padding: 0;
+        }
+
+        .composer button:hover {
+            transform: translateY(-1px);
+            opacity: 0.95;
+        }
+
+        .composer button svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+            display: block;
+        }
+
+        .composer button:disabled {
+            cursor: wait;
+            opacity: 0.6;
+            transform: none;
+        }
+
+        .typing {
+            display: inline-flex;
+            gap: 0.3rem;
+            align-items: center;
+        }
+
+        .typing span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(15, 56, 28, 0.55);
+            animation: blink 1s infinite ease-in-out;
+        }
+
+        .typing span:nth-child(2) {
+            animation-delay: 0.16s;
+        }
+
+        .typing span:nth-child(3) {
+            animation-delay: 0.32s;
+        }
+
+        .typing-bubble .bubble {
+            padding: 0.75rem 0.95rem;
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes blink {
+            0%, 80%, 100% {
+                transform: translateY(0);
+                opacity: 0.45;
+            }
+            40% {
+                transform: translateY(-3px);
+                opacity: 1;
+            }
+        }
+
+        /* ----------------------------------------------------
+           EMBEDDED MODE (inside the widget iframe)
+        ---------------------------------------------------- */
+        .is-embedded html,
+        .is-embedded body {
+            height: 100% !important;
+            min-height: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #ffffff !important;
+            overflow: hidden !important;
+        }
+
+        .is-embedded body {
+            display: block !important;
+        }
+
+        .is-embedded main {
+            padding: 0 !important;
+            margin: 0 !important;
+            max-width: 100% !important;
+            height: 100% !important;
+            min-height: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        .is-embedded .home-row,
+        .is-embedded .chat-header-bar {
+            display: none !important;
+        }
+
+        .is-embedded .chat-page {
+            height: 100% !important;
+            min-height: 100% !important;
+            flex: 1 !important;
+        }
+
+        .is-embedded .chat-shell {
+            height: 100% !important;
+            min-height: 100% !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            background: #ffffff !important;
+        }
+
+        .is-embedded .chat-stream {
+            padding: 0.85rem;
+        }
+
+        .is-embedded .bubble {
+            max-width: 90%;
+            font-size: 0.92rem;
+            padding: 0.75rem 0.9rem;
+        }
+
+        .is-embedded .composer {
+            padding: 0.65rem 0.85rem;
+        }
+
+        .is-embedded .composer textarea {
+            height: 44px;
+            min-height: 44px;
+            padding: 0.65rem 0.85rem;
+            font-size: 15px;
+            border-radius: 14px;
+        }
+
+        .is-embedded .composer button {
+            width: 44px;
+            height: 44px;
+            flex-basis: 44px;
+            border-radius: 14px;
+        }
+
+        /* ----------------------------------------------------
+           RESPONSIVE MOBILE BREAKPOINTS (for Standalone Page)
+        ---------------------------------------------------- */
+        @media (max-width: 640px) {
+            main {
+                padding: 0.6rem;
+                height: 100dvh;
+                max-height: 100vh;
+            }
+
+            .home-row {
+                margin-bottom: 0.5rem;
+                gap: 0.5rem;
+            }
+
+            .home-btn,
+            .new-chat-btn {
+                padding: 0.55rem 0.9rem;
+                font-size: 0.84rem;
+            }
+
+            .chat-shell {
+                border-radius: 18px;
+            }
+
+            .chat-header-bar {
+                padding: 0.7rem 0.9rem;
+            }
+
+            .chat-header-text strong {
+                font-size: 0.9rem;
+            }
+
+            .chat-avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9rem;
+            }
+
+            .chat-stream {
+                padding: 0.75rem;
+            }
+
+            .bubble {
+                max-width: 90%;
+                padding: 0.75rem 0.85rem;
+                font-size: 0.92rem;
+            }
+
+            .composer {
+                padding: 0.6rem 0.75rem;
+            }
+
+            .composer textarea {
+                height: 44px;
+                min-height: 44px;
+                padding: 0.65rem 0.85rem;
+                border-radius: 14px;
+            }
+
+            .composer button {
+                width: 44px;
+                height: 44px;
+                flex-basis: 44px;
+                border-radius: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="home-row">
+            <a class="home-btn" href="index.html" target="_top">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+                <span>Return to Home</span>
+            </a>
+            <button class="new-chat-btn" id="newChatBtn" type="button" aria-label="Start a new chat conversation">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                </svg>
+                <span>New Chat</span>
+            </button>
+        </div>
+
+        <div class="chat-page">
+            <section class="chat-shell" aria-label="AI chat">
+                <div class="chat-header-bar">
+                    <div class="chat-header-info">
+                        <div class="chat-avatar">ST</div>
+                        <div class="chat-header-text">
+                            <strong>SmarTech AI Assistant</strong>
+                            <span>Online</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="chatStream" class="chat-stream" aria-live="polite" aria-label="Conversation"></div>
+
+                <div class="composer">
+                    <form id="chatForm">
+                        <textarea id="chatInput" placeholder="Type your question here..." rows="1"></textarea>
+                        <button id="sendButton" type="submit" aria-label="Send message" title="Send message">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        const chatStream = document.getElementById("chatStream");
+        const chatForm = document.getElementById("chatForm");
+        const chatInput = document.getElementById("chatInput");
+        const sendButton = document.getElementById("sendButton");
+        const newChatBtn = document.getElementById("newChatBtn");
+        const messages = [];
+
+        function formatTime(date = new Date()) {
+            return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        }
+
+        function createTypingMessage() {
+            const wrapper = document.createElement("div");
+            wrapper.className = "message assistant typing-bubble";
+            wrapper.innerHTML = `
+                <div class="bubble">
+                    <span class="typing" aria-label="Assistant is typing">
+                        <span></span><span></span><span></span>
+                    </span>
+                </div>
+            `;
+            return wrapper;
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function simpleMarkdownFallback(text) {
+            if (!text) return "";
+            let out = text.replace(/\r\n/g, "\n");
+
+            // Code blocks
+            out = out.replace(/```([\s\S]*?)```/g, function(match, code) {
+                return "<pre><code>" + escapeHtml(code.trim()) + "</code></pre>";
+            });
+
+            // Inline code
+            out = out.replace(/`([^`]+)`/g, function(match, code) {
+                return "<code>" + escapeHtml(code) + "</code>";
+            });
+
+            // Headings: ####, ###, ##, #
+            out = out.replace(/^#### (.*?)$/gm, "<h4>$1</h4>");
+            out = out.replace(/^### (.*?)$/gm, "<h3>$1</h3>");
+            out = out.replace(/^## (.*?)$/gm, "<h2>$1</h2>");
+            out = out.replace(/^# (.*?)$/gm, "<h1>$1</h1>");
+
+            // Horizontal rule
+            out = out.replace(/^---$/gm, "<hr>");
+
+            // Bold & italic
+            out = out.replace(/\*\*\*(.*?)\*\*\*/g, "<strong><em>$1</em></strong>");
+            out = out.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+            out = out.replace(/\*(.*?)\*/g, "<em>$1</em>");
+
+            // Unordered list
+            out = out.replace(/(?:^[*-] .*(?:\n|$))+/gm, function(match) {
+                const items = match.trim().split("\n").map(function(line) {
+                    return "<li>" + line.replace(/^[*-] /, "").trim() + "</li>";
+                }).join("");
+                return "<ul>" + items + "</ul>";
+            });
+
+            // Ordered list
+            out = out.replace(/(?:^\d+\. .*(?:\n|$))+/gm, function(match) {
+                const items = match.trim().split("\n").map(function(line) {
+                    return "<li>" + line.replace(/^\d+\. /, "").trim() + "</li>";
+                }).join("");
+                return "<ol>" + items + "</ol>";
+            });
+
+            // Paragraphs
+            const blocks = out.split(/\n\n+/);
+            out = blocks.map(function(block) {
+                block = block.trim();
+                if (!block) return "";
+                if (/^<(h[1-6]|ul|ol|pre|hr|blockquote)/i.test(block)) {
+                    return block;
+                }
+                return "<p>" + block.replace(/\n/g, "<br>") + "</p>";
+            }).join("");
+
+            return out;
+        }
+
+        function parseMarkdown(text) {
+            if (typeof marked !== "undefined" && typeof marked.parse === "function") {
+                try {
+                    return marked.parse(text, { breaks: true, gfm: true });
+                } catch (e) {
+                    console.error("marked error:", e);
+                }
+            }
+            return simpleMarkdownFallback(text);
+        }
+
+        function renderMessage(message, suggestions = []) {
+            const row = document.createElement("div");
+            row.className = `message ${message.role}`;
+            const bubble = document.createElement("div");
+            bubble.className = "bubble";
+
+            const content = document.createElement("div");
+            content.className = "bubble-content";
+            if (message.role === "assistant") {
+                content.innerHTML = parseMarkdown(message.content);
+            } else {
+                content.textContent = message.content;
+            }
+            bubble.appendChild(content);
+
+            if (suggestions && suggestions.length > 0) {
+                const suggestionWrap = document.createElement("div");
+                suggestionWrap.className = "suggestion-pills";
+                suggestions.forEach(text => {
+                    const pill = document.createElement("button");
+                    pill.type = "button";
+                    pill.className = "suggestion-pill";
+                    pill.textContent = text;
+                    pill.addEventListener("click", () => {
+                        sendMessage(text);
+                    });
+                    suggestionWrap.appendChild(pill);
+                });
+                bubble.appendChild(suggestionWrap);
+            }
+
+            row.appendChild(bubble);
+            chatStream.appendChild(row);
+            chatStream.scrollTop = chatStream.scrollHeight;
+        }
+
+        function setBusy(isBusy) {
+            sendButton.disabled = isBusy;
+            chatInput.disabled = isBusy;
+            sendButton.setAttribute("aria-label", isBusy ? "Sending message" : "Send message");
+            sendButton.title = isBusy ? "Sending..." : "Send message";
+        }
+
+        function shouldBlurOnMobile() {
+            return window.matchMedia("(max-width: 640px) and (pointer: coarse)").matches;
+        }
+
+        function trimChatHistory() {
+            while (messages.length > 6) {
+                messages.shift();
+            }
+        }
+
+        function addTypingIndicator() {
+            const typing = createTypingMessage();
+            chatStream.appendChild(typing);
+            chatStream.scrollTop = chatStream.scrollHeight;
+            return typing;
+        }
+
+        function autoResizeTextarea() {
+            chatInput.style.height = 'auto';
+            const nextHeight = Math.min(chatInput.scrollHeight, 120);
+            chatInput.style.height = Math.max(nextHeight, 44) + 'px';
+        }
+
+        chatInput.addEventListener('input', autoResizeTextarea);
+
+        async function sendMessage(text) {
+            const trimmed = text.trim();
+            if (!trimmed) return;
+
+            const userMessage = { role: "user", content: trimmed, time: formatTime() };
+            messages.push({ role: "user", content: trimmed });
+            trimChatHistory();
+            renderMessage(userMessage);
+
+            chatInput.value = "";
+            chatInput.style.height = "";
+            if (!shouldBlurOnMobile()) {
+                chatInput.focus();
+            }
+
+            const typing = addTypingIndicator();
+            setBusy(true);
+
+            try {
+                const response = await fetch("api/chat", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ messages })
+                });
+
+                const responseText = await response.text();
+                typing.remove();
+
+                let reply = responseText.trim();
+
+                try {
+                    const data = JSON.parse(responseText);
+                    if (data && typeof data.reply === "string") {
+                        reply = data.reply.trim();
+                    }
+                } catch {
+                    // Keep plain text response
+                }
+
+                if (!reply) {
+                    throw new Error("The chat server returned an empty response.");
+                }
+
+                const assistantMessage = {
+                    role: "assistant",
+                    content: reply,
+                    time: formatTime()
+                };
+                messages.push({ role: "assistant", content: reply });
+                trimChatHistory();
+                renderMessage(assistantMessage);
+            } catch (error) {
+                typing.remove();
+                renderMessage({
+                    role: "assistant",
+                    content: error instanceof Error ? error.message : "An unexpected error occurred. Please try again.",
+                    time: formatTime()
+                });
+            } finally {
+                setBusy(false);
+                if (!shouldBlurOnMobile()) {
+                    requestAnimationFrame(() => {
+                        chatInput.focus();
+                    });
+                } else {
+                    chatInput.blur();
+                }
+            }
+        }
+
+        function initGreeting() {
+            renderMessage({
+                role: "assistant",
+                content: "Hello! 👋 I'm the SmarTech Solutions AI assistant. Ask me anything about our web development, school management systems, digital grampanchayat solutions, or internships.",
+                time: formatTime()
+            }, [
+                "What services do you offer?",
+                "SmartTech School App details",
+                "Contact SmarTech Solutions"
+            ]);
+        }
+
+        function resetChat(e) {
+            if (e) e.preventDefault();
+            messages.length = 0;
+            chatStream.innerHTML = '';
+            chatInput.value = '';
+            chatInput.style.height = '';
+            initGreeting();
+            if (!shouldBlurOnMobile()) {
+                chatInput.focus();
+            }
+        }
+
+        if (newChatBtn) {
+            newChatBtn.addEventListener("click", resetChat);
+        }
+
+        chatForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            sendMessage(chatInput.value);
+        });
+
+        chatInput.addEventListener("keydown", function (event) {
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage(chatInput.value);
+            }
+        });
+
+        // Initialize greeting message on load
+        initGreeting();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard.php
+Disallow: /admin-management.html
+Disallow: /orderformfiles/
+Disallow: /partials/
+Disallow: /api/
+
+Sitemap: https://smartechsolutions.in/sitemap.xml

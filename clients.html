@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Clients & Project Portfolio | SmarTech Solutions Thane</title>
+    <meta name="description"
+        content="Explore our trusted clients and successful digital projects. SmarTech Solutions delivers custom websites, school ERP systems, and mobile apps for businesses across India.">
+    <meta name="keywords"
+        content="SmarTech Solutions clients, web development portfolio Thane, website client list, school ERP clients, grampanchayat web projects, mobile app portfolio India">
+    <meta name="author" content="SmarTech Solutions">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://smartechsolutions.in/clients.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://smartechsolutions.in/clients.html">
+    <meta property="og:title" content="Our Clients & Project Portfolio | SmarTech Solutions Thane">
+    <meta property="og:description" content="Explore our client portfolio across schools, grampanchayats, retail, and corporate businesses.">
+    <meta property="og:image" content="https://smartechsolutions.in/assets/smarttechlogo.png">
+    <meta property="og:site_name" content="SmarTech Solutions">
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://smartechsolutions.in/clients.html">
+    <meta name="twitter:title" content="Our Clients & Project Portfolio | SmarTech Solutions">
+    <meta name="twitter:description" content="Trusted by schools, Grampanchayats, and enterprises across Maharashtra and India.">
+    <meta name="twitter:image" content="https://smartechsolutions.in/assets/smarttechlogo.png">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "CollectionPage",
+          "@id": "https://smartechsolutions.in/clients.html#page",
+          "url": "https://smartechsolutions.in/clients.html",
+          "name": "Our Clients & Project Portfolio - SmarTech Solutions",
+          "description": "Showcase of clients and successful digital transformations delivered by SmarTech Solutions.",
+          "isPartOf": {
+            "@type": "WebSite",
+            "@id": "https://smartechsolutions.in/#website"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://smartechsolutions.in/clients.html#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://smartechsolutions.in/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Clients Portfolio",
+              "item": "https://smartechsolutions.in/clients.html"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <style>
+        :root {
+            --green-dark: #0f381c;
+            --green-main: #228b22;
+            --green-light: #4cbb17;
+            --green-accent: #a3e4d7;
+            --white: #ffffff;
+            --text-dark: #333333;
+            --bg-light: #f4f9f4;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .top-contact {
+            background-color: var(--green-dark);
+            color: var(--white);
+            text-align: center;
+            padding: 0.8rem 1rem;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1002;
+        }
+
+        main {
+            padding: 3rem 3rem 3rem 2rem;
+        }
+
+        .page-header {
+            max-width: 1200px;
+            margin: 2rem auto 2rem;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 3rem;
+            color: var(--green-dark);
+        }
+
+        .page-header p {
+            color: #555;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-top: 1rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .page-header .subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        /* --- Clients Grid --- */
+        .clients-section {
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+            padding: 3rem 2rem;
+            background-color: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+        }
+
+        .clients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .client-card {
+            background-color: #f9fbf9;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(34, 139, 34, 0.08);
+            cursor: pointer;
+        }
+
+        .client-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(34, 139, 34, 0.15);
+        }
+
+        .client-card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            object-position: top center;
+            display: block;
+            border-bottom: 3px solid var(--green-light);
+        }
+
+        .client-card-info {
+            padding: 1.2rem 1.5rem;
+            text-align: center;
+        }
+
+        .client-card-info h3 {
+            font-size: 1.1rem;
+            color: var(--green-dark);
+            margin: 0;
+            font-weight: 700;
+        }
+
+        /* --- Image Lightbox --- */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 3000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            overflow-y: auto;
+            padding: 2rem 0;
+            box-sizing: border-box;
+        }
+
+        .lightbox.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 3rem;
+            color: #fff;
+            cursor: pointer;
+            transition: color 0.3s;
+            line-height: 1;
+            z-index: 3001;
+        }
+
+        .lightbox-close:hover {
+            color: var(--green-light);
+        }
+
+        .lightbox-frame {
+            width: min(92vw, 920px);
+            height: min(68vh, 620px);
+            background: #fff;
+            border-radius: 0;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .lightbox img {
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 0;
+            object-fit: contain;
+            object-position: center center;
+            display: block;
+            flex-shrink: 0;
+        }
+
+        .lightbox-caption {
+            color: #fff;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-top: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        .lightbox-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .lightbox-nav-btn {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.78);
+            cursor: pointer;
+            user-select: none;
+            padding: 0;
+            z-index: 3001;
+            transition: color 0.3s;
+            background: transparent;
+            border: 0;
+            line-height: 1;
+        }
+
+        .lightbox-nav-btn:hover {
+            color: var(--white);
+        }
+
+        .lightbox-nav-btn.prev {
+            left: 20px;
+        }
+
+        .lightbox-nav-btn.next {
+            right: 20px;
+        }
+
+        .lightbox-counter {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .lightbox-link-btn {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.6rem 1.5rem;
+            background-color: var(--green-light);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .lightbox-link-btn:hover {
+            background-color: var(--green-main);
+            transform: translateY(-2px);
+        }
+
+        /* --- Footer --- */
+        /* --- Responsive --- */
+        @media (max-width: 992px) {
+            main {
+                padding: 6rem 1.5rem 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2.4rem;
+            }
+
+            .clients-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1.2rem;
+            }
+
+            .client-card-img {
+                height: 150px;
+            }
+
+            .client-card-info {
+                padding: 0.8rem 1rem;
+            }
+
+            .client-card-info h3 {
+                font-size: 0.95rem;
+            }
+
+            .lightbox-frame {
+                width: calc(100vw - 1rem);
+                height: min(54vh, 420px);
+                border-radius: 0;
+            }
+
+            .lightbox img {
+                width: 100%;
+                height: 100%;
+            }
+
+            .lightbox-nav-btn {
+                position: fixed;
+                top: auto;
+                bottom: 1rem;
+                transform: none;
+                font-size: 2.5rem;
+                padding: 0;
+                background: transparent;
+                border: 0;
+                z-index: 3002;
+            }
+
+            .lightbox-nav-btn.prev {
+                left: 12px;
+            }
+
+            .lightbox-nav-btn.next {
+                right: 12px;
+            }
+
+            .lightbox-controls {
+                margin-top: 1.25rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <div hx-get="partials/top-contact.html" hx-trigger="load" hx-swap="outerHTML"></div> -->
+
+    <div hx-get="partials/header.html" hx-trigger="load" hx-swap="outerHTML"></div>
+
+    <main>
+        <div class="page-header">
+            <h1>Our Clients</h1>
+            <div class="subtitle">TRUSTED BY BUSINESSES ACROSS INDIA</div>
+            <p>We take immense pride in our long-standing relationships with clients from diverse industries. Here are
+                some of the businesses we've had the privilege of working with.</p>
+        </div>
+
+        <section class="clients-section">
+            <div class="clients-grid" id="clientsGrid">
+                <!-- Client cards will be generated dynamically -->
+            </div>
+        </section>
+    </main>
+
+    <div hx-get="partials/aichat.html" hx-trigger="load" hx-swap="outerHTML"></div>
+
+    <!-- Lightbox overlay -->
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <div class="lightbox-frame">
+            <img id="lightboxImg" src="" alt="Client">
+        </div>
+        <div id="lightboxCaption" class="lightbox-caption"></div>
+        <a id="lightboxLink" class="lightbox-link-btn" href="#" target="_blank">Visit Website</a>
+        <div class="lightbox-controls">
+            <div class="lightbox-nav-btn prev" onclick="changeLightbox(-1, event)">&#10094;</div>
+            <div id="lightboxCounter" class="lightbox-counter"></div>
+            <div class="lightbox-nav-btn next" onclick="changeLightbox(1, event)">&#10095;</div>
+        </div>
+    </div>
+
+    <div hx-get="partials/footer.html" hx-trigger="load" hx-swap="outerHTML"></div>
+
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <script>
+        // Highlight active nav link after HTMX loads header
+        document.body.addEventListener('htmx:afterSwap', function (evt) {
+            if (evt.detail.target.tagName.toLowerCase() === 'header') {
+                const navLinks = document.querySelectorAll('header nav ul li a');
+                navLinks.forEach(link => {
+                    if (link.getAttribute('href') === 'clients.html' || link.getAttribute('data-nav') === 'clients') {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+
+        // Client data loading from JSON
+        let clientsData = [];
+        let currentLightboxIndex = 0;
+
+        fetch('assets/data/clients.json')
+            .then(response => response.json())
+            .then(data => {
+                clientsData = data;
+                const grid = document.getElementById('clientsGrid');
+                grid.innerHTML = '';
+
+                clientsData.forEach((client, index) => {
+                    const cardHTML = `
+                        <div class="client-card" onclick="openLightbox(${index})">
+                            <img class="client-card-img" src="${client.img}" alt="${client.name}">
+                            <div class="client-card-info">
+                                <h3>${client.name}</h3>
+                            </div>
+                        </div>
+                    `;
+                    grid.insertAdjacentHTML('beforeend', cardHTML);
+                });
+            })
+            .catch(error => console.error('Error loading clients data:', error));
+
+        // Lightbox functions
+        const lightbox = document.getElementById('lightbox');
+
+        function openLightbox(index) {
+            if (clientsData.length === 0) return;
+            currentLightboxIndex = index;
+            updateLightboxContent();
+            lightbox.classList.add('show');
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('show');
+        }
+
+        function changeLightbox(direction, event) {
+            if (event) event.stopPropagation(); // prevent closing lightbox when clicking nav buttons
+            currentLightboxIndex += direction;
+            if (currentLightboxIndex < 0) currentLightboxIndex = clientsData.length - 1;
+            if (currentLightboxIndex >= clientsData.length) currentLightboxIndex = 0;
+            updateLightboxContent();
+        }
+
+        function updateLightboxContent() {
+            const client = clientsData[currentLightboxIndex];
+            document.getElementById('lightboxImg').src = client.img;
+            document.getElementById('lightboxCaption').innerText = client.name;
+            document.getElementById('lightboxCounter').innerText = `${currentLightboxIndex + 1} / ${clientsData.length}`;
+            
+            const linkBtn = document.getElementById('lightboxLink');
+            if (client.link) {
+                linkBtn.href = client.link;
+                linkBtn.style.display = 'inline-block';
+            } else {
+                linkBtn.style.display = 'none';
+            }
+        }
+
+    </script>
+</body>
+
+</html>

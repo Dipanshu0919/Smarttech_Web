@@ -1,0 +1,71 @@
+{
+  "hero": {
+    "eyebrow": "Career",
+    "title": "We help students and businesses grow with real digital work",
+    "intro": "SmarTech Solutions is not just about making websites. Its about a team that builds practical skills, real projects, and useful digital services. Students can learn through internships in web development and Android app development. Businesses can grow with digital marketing and ERP solutions. We also build sites for Grampanchayat, which gives young people exposure to meaningful public-service work."
+  },
+  "support": [
+    {
+      "title": "For students",
+      "description": "Internships give hands-on exposure in web development and Android app development so freshers can learn by building real work."
+    },
+    {
+      "title": "For businesses",
+      "description": "Digital marketing and ERP solutions help companies reach more people, work faster, and manage daily operations with less friction."
+    },
+    {
+      "title": "For communities",
+      "description": "Grampanchayat websites and public-facing digital projects give young developers experience with useful work that serves local people."
+    }
+  ],
+  "journey": [
+    {
+      "title": "Learn the basics through real projects",
+      "description": "Students start with websites and app tasks that teach design, layout, logic, and how a professional digital product is actually delivered."
+    },
+    {
+      "title": "Build Android and web development skills",
+      "description": "Interns can move from simple pages into mobile app screens, forms, dashboards, and user flows that mirror real client needs."
+    },
+    {
+      "title": "Understand business growth work",
+      "description": "Digital marketing and ERP projects show how technology supports sales, operations, communication, and long-term business growth."
+    },
+    {
+      "title": "Use your skills to help others",
+      "description": "The final goal is not only a job title. It is to help people, businesses, and local institutions reach their future aims through useful digital work."
+    },
+    {
+      "title": "Grampanchayat Websites",
+      "description": "We provide sites for Grampanchayat."
+    }
+  ],
+  "values": [
+    "We prefer practical learning over theory that never reaches real work.",
+    "We value ownership, clear communication, and reliable delivery.",
+    "We work across design, development, marketing, and support as one team.",
+    "We believe a career grows faster when the work helps people, not just portfolios."
+  ],
+  "openings": [
+    {
+      "title": "Web Development Intern",
+      "description": "Work on responsive websites, landing pages, and support screens while learning modern front-end development."
+    },
+    {
+      "title": "Android App Development Intern",
+      "description": "Create Android app screens and features that are stable, intuitive, and ready for real users."
+    },
+    {
+      "title": "Digital Marketing Intern",
+      "description": "Learn SEO, social media, and lead generation while seeing how marketing supports actual business growth."
+    },
+    {
+      "title": "ERP Support Intern",
+      "description": "Support workflow mapping, implementation tasks, and client coordination around ERP solutions."
+    }
+  ],
+  "closing": {
+    "title": "Our goal is simple",
+    "text": "Help people reach their future aim through internships, useful project work, business solutions, and digital services that make a real difference."
+  }
+}

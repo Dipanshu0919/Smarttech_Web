@@ -1,0 +1,338 @@
+<style>
+    :root {
+        --shell-sidebar-width: 250px;
+        --shell-green-dark: #0f381c;
+        --shell-green-main: #228b22;
+        --shell-white: #ffffff;
+    }
+
+    html, body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+
+    html,
+    body {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+        display: none;
+    }
+
+    body {
+        min-height: 100vh;
+    }
+
+    header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--shell-sidebar-width);
+        background: var(--shell-white);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.08);
+        z-index: 1001;
+        overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    header::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+        display: none;
+    }
+
+    nav {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 2rem 1.5rem;
+    }
+
+    nav ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.7rem;
+        margin: 0;
+        padding: 0;
+    }
+
+    nav ul li a {
+        text-decoration: none;
+        color: var(--shell-green-dark);
+        font-weight: 700;
+        font-size: 0.98rem;
+        padding: 0.85rem 1rem;
+        border-radius: 16px;
+        background: #f2fbf2;
+        transition: all 0.25s ease;
+        border: 1px solid transparent;
+        display: block;
+    }
+
+    nav ul li a:hover,
+    nav ul li a:focus,
+    nav ul li a.active {
+        color: var(--shell-white);
+        background: var(--shell-green-main);
+        border-color: var(--shell-green-main);
+    }
+
+    main {
+        margin-left: var(--shell-sidebar-width);
+    }
+
+    footer {
+        margin-left: var(--shell-sidebar-width);
+        background: var(--shell-green-dark);
+        color: var(--shell-white);
+        padding: 4rem 5%;
+        text-align: center;
+    }
+
+    .footer-content {
+        max-width: 800px;
+        margin: 0 auto;
+        line-height: 1.8;
+    }
+
+    .footer-content p {
+        margin: 0.4rem 0;
+        opacity: 0.95;
+    }
+
+    footer p {
+        margin: 0;
+        font-size: 1rem;
+        opacity: 0.8;
+    }
+
+    .mobile-header {
+        display: none;
+    }
+
+    .mobile-header-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+    }
+
+    .whatsapp-icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #25d366, #1ebe5d);
+        color: #ffffff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid rgba(255, 255, 255, 0.9);
+        transition: transform 0.2s ease, filter 0.2s ease;
+        text-decoration: none;
+    }
+
+    .whatsapp-icon-btn svg {
+        width: 21px;
+        height: 21px;
+        fill: currentColor;
+        transform: translateX(0.5px);
+    }
+
+    .whatsapp-icon-btn:hover,
+    .whatsapp-icon-btn:focus-visible {
+        transform: translateY(-2px);
+        filter: saturate(1.05);
+    }
+
+    .facebook-icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #1877f2, #0c63d4);
+        color: #ffffff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid rgba(255, 255, 255, 0.9);
+        transition: transform 0.2s ease, filter 0.2s ease;
+        text-decoration: none;
+    }
+
+    .facebook-icon-btn svg {
+        width: 21px;
+        height: 21px;
+        fill: currentColor;
+    }
+
+    .facebook-icon-btn:hover,
+    .facebook-icon-btn:focus-visible {
+        transform: translateY(-2px);
+        filter: saturate(1.05);
+    }
+
+    .sidebar-overlay {
+        display: none;
+    }
+
+    @media (max-width: 992px) {
+        header {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 1005;
+            overflow-y: auto;
+        }
+
+        header.open {
+            transform: translateX(0);
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .mobile-header {
+            display: flex !important;
+        }
+
+        main,
+        footer {
+            margin-left: 0;
+        }
+    }
+</style>
+
+<style>
+    .kinetic-logo-wrapper { position: relative; display: inline-block; padding-bottom: 5px; }
+    .kinetic-logo-wrapper img { display: block; position: relative; z-index: 2; width: auto; height: auto; object-fit: contain; }
+    .kinetic-bg { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); z-index: 1; pointer-events: none; --loader-size: 140px; --light-color: rgba(66, 229, 153, 0.6); --dot-size: 6px; --dot-size-half: calc(var(--dot-size) / 2); --dot-size-half-neg: calc(var(--dot-size-half) * -1); display: block; width: var(--loader-size); height: 2px; background-color: var(--light-color); --anim-duration: 1.5s; color: #0f381c; }
+    .kinetic-bg::before, .kinetic-bg::after { content: ''; position: absolute; width: var(--dot-size); aspect-ratio: 1 / 1; background: currentColor; border-radius: 50%; top: calc(var(--dot-size-half-neg) + 1px); left: var(--dot-size-half-neg); animation: loader-2 var(--anim-duration) cubic-bezier(0.27, 0.08, 0.26, 0.7) infinite; }
+    .kinetic-bg::after { animation-delay: calc(var(--anim-duration) / 3 * -1); background: #fade28; }
+    @keyframes loader-2 { 0%, 100% { transform: none; } 44% { transform: translateX(calc(var(--loader-size) + var(--dot-size-half))); } }
+</style>
+
+<div class="mobile-header" style="display: none; position: fixed; top: 0; left: 0; right: 0; height: 70px; background: white; z-index: 1004; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 0 1.5rem; justify-content: space-between; align-items: center;">
+    <a href="index.html" class="logo" style="text-decoration: none;">
+        <div class="kinetic-logo-wrapper">
+            <div class="kinetic-bg"></div>
+            <img src="assets/smarttechlogo.png" alt="SmarTech Solutions Logo" style="height: 58px;">
+        </div>
+    </a>
+    <div class="mobile-header-actions">
+        <a class="facebook-icon-btn" href="https://www.facebook.com/profile.php?id=61571731650827" target="_blank"
+            rel="noopener noreferrer" aria-label="Visit our Facebook page">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+            </svg>
+        </a>
+        <a class="whatsapp-icon-btn" href="https://wa.me/919221204466" target="_blank" rel="noopener noreferrer"
+            aria-label="Chat on WhatsApp">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                    d="M20.52 3.48A11.84 11.84 0 0 0 12.09 0C5.55 0 .23 5.32.23 11.86c0 2.09.55 4.14 1.59 5.95L0 24l6.38-1.67a11.78 11.78 0 0 0 5.7 1.45h.01c6.54 0 11.86-5.32 11.86-11.86 0-3.17-1.24-6.14-3.43-8.44zM12.1 21.78h-.01a9.83 9.83 0 0 1-5.01-1.37l-.36-.21-3.78.99 1.01-3.68-.23-.38a9.85 9.85 0 0 1-1.52-5.27c0-5.44 4.43-9.87 9.88-9.87 2.64 0 5.13 1.03 6.98 2.9a9.8 9.8 0 0 1 2.88 6.98c0 5.45-4.43 9.88-9.87 9.88zm5.41-7.4c-.3-.15-1.78-.88-2.06-.98-.27-.1-.47-.15-.67.15-.2.3-.77.98-.94 1.18-.17.2-.35.23-.65.08-.3-.15-1.26-.46-2.39-1.46-.89-.79-1.49-1.76-1.66-2.06-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.62-.92-2.22-.24-.58-.48-.5-.67-.51l-.57-.01c-.2 0-.52.08-.79.38-.27.3-1.04 1.01-1.04 2.45s1.07 2.84 1.22 3.04c.15.2 2.1 3.2 5.08 4.49.71.31 1.27.49 1.71.63.72.23 1.37.2 1.89.12.58-.09 1.78-.73 2.03-1.44.25-.71.25-1.32.18-1.44-.08-.12-.28-.2-.58-.35z" />
+            </svg>
+        </a>
+        <div class="hamburger" id="mobileToggle" style="cursor: pointer; display: flex; flex-direction: column; gap: 6px; padding: 5px;">
+            <span style="display: block; width: 28px; height: 3px; background: #0f381c; border-radius: 2px;"></span>
+            <span style="display: block; width: 28px; height: 3px; background: #0f381c; border-radius: 2px;"></span>
+            <span style="display: block; width: 28px; height: 3px; background: #0f381c; border-radius: 2px;"></span>
+        </div>
+    </div>
+</div>
+<div class="sidebar-overlay" id="sidebarOverlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 1003; backdrop-filter: blur(2px);"></div>
+
+<header id="sidebar">
+    <nav>
+        <div class="logo-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; width: 100%;">
+            <a href="index.html" class="logo" style="text-decoration: none; text-align: left; display: block;">
+                <div class="kinetic-logo-wrapper">
+                    <div class="kinetic-bg"></div>
+                    <img src="assets/smarttechlogo.png" alt="SmarTech Solutions Logo" style="width: 120%; max-width: 260px; height: auto; margin-left: -20px;">
+                </div>
+            </a>
+        </div>
+        <ul>
+            <li><a data-nav="home" href="index.html#home">Home</a></li>
+            <li><a href="index.html#about">About Us</a></li>
+            <li><a href="index.html#services">Our Services</a></li>
+            <li><a data-nav="clients" href="clients.html">Our Clients</a></li>
+            <li><a data-nav="sms" href="school-management-system.html">SmartTech School App</a></li>
+            <li><a data-nav="grampanchayat" href="grampanchayat.html">Digital Grampanchayat</a></li>
+            <li><a data-nav="career" href="career.html">Career</a></li>
+            <li><a data-nav="enquiry" href="enquiry.html">Enquiry</a></li>
+            <li><a data-nav="enquiry" href="orderform.html">Order Form</a></li>
+            <li><a data-contact="true" href="index.html">Contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+<script>
+    (function () {
+        const toggle = document.getElementById('mobileToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const closeBtn = document.getElementById('closeSidebar');
+
+        function openNav() {
+            if (sidebar) sidebar.classList.add('open');
+            if (overlay) overlay.style.display = 'block';
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeNav() {
+            if (sidebar) sidebar.classList.remove('open');
+            if (overlay) overlay.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        if (toggle) toggle.addEventListener('click', openNav);
+        if (closeBtn) closeBtn.addEventListener('click', closeNav);
+        if (overlay) overlay.addEventListener('click', closeNav);
+
+        if (sidebar) {
+            const links = sidebar.querySelectorAll('a');
+            links.forEach(link => {
+                link.addEventListener('click', closeNav);
+            });
+        }
+
+        document.addEventListener('click', function (e) {
+            const link = e.target.closest('a[data-contact="true"]');
+            if (!link) return;
+            if (e.defaultPrevented) return;
+
+            e.preventDefault();
+            closeNav();
+
+            const isHomePage = window.location.pathname.endsWith('/index.html') || window.location.pathname.endsWith('/');
+
+            if (isHomePage) {
+                document.dispatchEvent(new CustomEvent('smartech:openContactModal'));
+                return;
+            }
+
+            sessionStorage.setItem('smartechOpenContactModal', '1');
+            window.location.href = link.href;
+        });
+
+        function handleResize() {
+            if (window.innerWidth <= 992) {
+                if (closeBtn) closeBtn.style.display = 'block';
+            } else {
+                if (closeBtn) closeBtn.style.display = 'none';
+                closeNav();
+            }
+        }
+
+        handleResize(); 
+        window.addEventListener('resize', handleResize);
+    })();
+</script>
