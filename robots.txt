@@ -7,3 +7,4 @@ Disallow: /partials/
 Disallow: /api/
 
 Sitemap: https://smartechsolutions.in/sitemap.xml
+
