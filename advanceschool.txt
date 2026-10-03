@@ -1,0 +1,105 @@
+ADVANCED: Dynamic App with Online Admissions & Parent Portal
+Mid budget. Everything in Basic, plus Google Play Store publishing, a web admin panel (CMS), online admissions and payments, push notifications, and a login area for parents and teachers. All content is updated by the school office from the web admin panel and appears live in the app.
+
+Tabs:
+Common (on every screen)
+Floating WhatsApp button: A green WhatsApp icon at the bottom-right corner of every screen. It stays visible even when scrolling and opens a WhatsApp chat with the school number.
+Search bar: A search box at the top of the app. A parent might be looking for "holiday list" or "fee structure" and won't want to tap through 4-5 screens to find it. Let them just type and find it.
+Consent screen (DPDP Act 2023): Shown when the app is opened for the first time and again on forms. Parents give consent before any student/parent data is collected, and can withdraw consent later from inside the app (Portal tab > Settings).
+
+Main Tabs:
+1. Home Tab (Top left icon)
+School identity: Your school's logo, name, motto, and colors should be visible the moment someone opens the app: on the app icon, the splash screen (the first screen while the app loads), and the home screen. This builds instant recognition.
+Home screen video: A short 30-second video of school life (students studying, playing, celebrating) on the home screen works really well.
+Latest notices strip: The 2-3 newest pinned notices from the Updates tab are shown on the home screen, so parents see urgent information without opening anything.
+Quick action buttons: Big shortcut buttons to the most used actions: Apply Now, Pay Fees, Book a Campus Visit, and Parent Login.
+2. About Tab
+Teacher profiles: Real photos of teachers with their name, qualification, years of experience, and subjects they teach. Parents want to know who will be spending 6 hours a day with their child. A simple grid layout works.
+Student achievements: A section showing what your students have won: Olympiads, sports, art competitions, science fairs. This shows the school produces results.
+Parent testimonials: Short quotes or 30-second video clips from current parents: "We chose this school because..." Social proof is powerful.
+News & press coverage: If your school was in a newspaper or TV, show it here. "Featured in The Times of India" builds instant credibility.
+Full FAQ section: Now expanded to the top 20-30 questions, including the ones that change every year:
+What age is my child eligible for?
+Is there a sibling discount?
+What time does school start and end?
+Is transport available to my area?
+Annual report: A downloadable PDF annual report, updated every year. Shows school performance, achievements, and plans.
+3. Academics Tab
+Class-wise curriculum & syllabus: Show what is being taught in each class, updated when the syllabus changes. Link to the CBSE/ICSE/State Board syllabus if applicable.
+Academic calendar: Term dates, exam windows, result dates, vacation periods. A simple timeline or table, updated every year.
+Extracurricular schedules: Timings and days for sports, music, art, debate, coding, yoga, and science club.
+Transport/bus information: List all bus routes with stops and timings, updated every year. This is one of the most asked questions by parents.
+Canteen/meal information: Menu, nutrition info, allergy policy. If you serve meals, show the menu, updated as it changes.
+4. Admissions Tab
+Clear fee structure: A simple table showing all fees: annual tuition, one-time charges, transport, uniform, exam fees, canteen. No hidden costs. If a parent has to call you 3 times to understand the total fee, they'll get frustrated and look at another school. The office updates it every year from the admin panel.
+Online admission form: Instead of making parents come to the office and fill a paper form, give them a step-by-step form inside the app. They fill in details, upload documents (Aadhaar, birth certificate, photo) using the phone camera or gallery, and submit. The system auto-generates an application number. This saves time for both parents and your office staff.
+Online fee payment: Parents can pay the registration fee, admission fee, and first installment directly in the app. Accept UPI (opens GPay, PhonePe, Paytm), net banking, credit/debit cards. After payment, auto-send a receipt via email.
+"Book a Campus Visit" button: A button that says "Schedule a Visit." Parents pick a date and time, and your team confirms via WhatsApp. This is a huge conversion booster because parents want to physically see the school before admitting their child.
+Brochure download: A clean PDF brochure that parents can download and share with family members. Include photos, fee structure, highlights, and contact info. Updated every year.
+5. Updates Tab
+Notice board (digital): A section where the office posts pinned notices with dates. Example: "School closed on 25th September due to heavy rain." "PTM next Friday at 4 PM." Parents see the latest notice at the top.
+Push notifications: Important notices appear as a notification on the parent's phone, even when the app is closed. Parents can choose which categories they want (general notices, exam updates, fee reminders) and turn them off anytime.
+Events calendar: A monthly calendar showing all events: sports day, annual day, parent-teacher meetings, exams, holidays. Parents can filter by class and add events to their phone calendar with one tap.
+Academic holiday list: A simple table showing all holidays for the year, also downloadable as a PDF. This is the most searched screen in every school app. The office updates it every year.
+Newsletter: A monthly digest for parents (in the app and by email): what happened this month, upcoming events, tips for children's learning.
+Social media feeds: Show your Instagram, YouTube, and Facebook posts inside the app so they update on their own.
+WhatsApp notifications (background): Send important updates via WhatsApp Business API to parents who have opted in: fee reminders, exam schedules, urgent circulars. Always get consent first (DPDP Act requirement).
+Email & SMS alerts (background): For parents who don't use WhatsApp or have notifications turned off, send email and SMS for important updates: fee due dates, exam results, circulars.
+6. Gallery Tab
+Event-wise photo gallery (with privacy controls): Photos organized by event and year, added by the office from the admin panel. Get parent consent before posting photos of their children, and keep an opt-out option. (The fixed campus gallery from Basic stays at the top.)
+7. Portal Tab (Login Area)
+This is a separate login area inside the app that is not visible to the public. One app serves parents and staff; what a person sees depends on their login.
+Login & security:
+Login with phone OTP
+Two-factor authentication (phone OTP + password) for admin logins
+Auto-logout after 15 minutes of inactivity
+All data between the app and server encrypted (HTTPS)
+Parent Portal: After login, parents can see:
+Daily attendance of their child (present/absent/late)
+Homework & assignments for each subject
+Exam schedule and marks/results (internal, half-yearly, final)
+Fee statements: what's paid and what's pending
+Online fee payment
+Digital report cards: downloadable PDF, no more carrying physical envelopes
+Staff/Teacher Portal:
+Mark attendance
+Upload homework and study material
+Enter marks
+View class schedules
+Settings: Notification preferences (which categories to receive) and consent withdrawal.
+8. Contact Tab (Top right icon )
+Office hours: Added to the contact screen and updated from the admin panel. (Address, tap-to-call, email, WhatsApp, and emergency number from Basic stay here.)
+Staff directory: A searchable list: name, role, department, email, phone extension. A parent can find the right person without calling the main office.
+Downloadable forms (PDF): Updated by the office when the forms change.
+Admission form
+Transfer Certificate (TC) application
+Leave application
+Fee receipt template
+Medical/health form
+Parent consent form for events/trips
+Recruitment screen: A "We're hiring" section with job openings and an application form (with CV upload).
+Android's bottom bar shows 5 tabs at most. Keep Home, Admissions, Updates, and Portal as bottom tabs, and put the rest (About, Academics, Gallery, Contact) under a "More" tab.
+
+Not in a Tab (Delivery & Backend)
+Delivery
+Google Play Store: The app is published on the Google Play Store for Android phones and tablets. Parents install it by searching the school name, like any other app. We prepare the store listing: app name, description, screenshots, icon, and privacy policy link, and handle the review process.
+Automatic updates: New versions go through the Play Store, and parents get updates automatically. Content changes (fees, notices, holidays) don't need a new version at all. The office changes them from the web admin panel and they appear live in the app.
+Phone and tablet layouts: Screens are designed separately for Android phones and Android tablets, so the app is comfortable to use on a bigger screen.
+Web Admin Panel / CMS (for the school office)
+A website that we build and host for the school. The office opens it in any browser on a desktop, laptop, or tablet, logs in, and updates everything shown in the app without calling a developer. Your office staff or a non-technical person should be able to use it easily. Whatever is changed on the website appears live in the app on every parent's phone. From this panel the office can manage:
+Notices (and send push notifications along with them)
+Fee structure, holiday list, academic calendar, events, and syllabus
+Photos, event galleries, achievements, testimonials, and press coverage
+Bus routes, canteen menu, and downloadable forms/PDFs
+Teacher profiles and the staff directory
+Admission applications received from the app (view, search, and export)
+User accounts: add or remove staff logins, and give each person access only to what they need (for example, the accounts clerk sees only fees)
+The panel is not a part of the app. It runs only on the web for the school staff, and parents never see it.
+Safety, Privacy & Legal`
+DPDP Act 2023 consent management: India's data protection law is now active. Because Advanced starts collecting student/parent data through forms and the portal, you need consent before collecting data (shown on first login and on forms) and a clear way for parents to give or withdraw consent from inside the app.
+Form protection: Spam and bot protection on all public forms (admission form, campus visit booking, recruitment).
+Store-ready privacy policy: Google Play requires a published privacy policy and a data-safety declaration. We prepare these for the listing.
+Backend
+Cloud server and database: A reliable backend server that stores all data (admissions, attendance, marks, fees) safely, with daily backups. The same server also hosts the web admin panel (CMS) that the school office uses. Traffic spikes 5-10x during admission season (February-May), so the server is set up to handle it.
+Crash and uptime monitoring: Tools that watch the server and the app. If the server goes down or the app crashes for users, we get an email/SMS immediately. You don't want to find out the app is not working because a parent told you on WhatsApp.
+

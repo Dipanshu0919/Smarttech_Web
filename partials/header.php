@@ -264,11 +264,13 @@
             <li><a href="index.html#about">About Us</a></li>
             <li><a href="index.html#services">Our Services</a></li>
             <li><a data-nav="clients" href="clients.html">Our Clients</a></li>
-            <li><a data-nav="sms" href="school-management-system.html">SmartTech School App</a></li>
+            <li><a data-nav="school-app" href="smartech-school-app.html">School App Solution</a></li>
+            <li><a data-nav="resort" href="resort-digital-solution.html">Resort Digital Solution</a></li>
             <li><a data-nav="grampanchayat" href="grampanchayat.html">Digital Grampanchayat</a></li>
+            <li><a data-nav="qrcode" href="qrvideo.html">QR Based Gharpatti</a></li>
             <li><a data-nav="career" href="career.html">Career</a></li>
             <li><a data-nav="enquiry" href="enquiry.html">Enquiry</a></li>
-            <li><a data-nav="enquiry" href="orderform.html">Order Form</a></li>
+            <li><a data-nav="orderform" href="orderform.html">Order Form</a></li>
             <li><a data-contact="true" href="index.html">Contact</a></li>
         </ul>
     </nav>

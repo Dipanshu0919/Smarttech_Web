@@ -152,7 +152,13 @@ if (basename($path) === 'index.php' || $path === '/index.php') {
 if ($path === '/api/chat' && $request_method === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true);
     $user_input = $input['messages'] ?? [];
-    $txt = file_exists('content.txt') ? file_get_contents('content.txt') : '';
+    
+    $txt = '';
+    if (file_exists('content.txt')) {
+        $txt = file_get_contents('content.txt');
+    } elseif (file_exists('context.txt')) {
+        $txt = file_get_contents('context.txt');
+    }
     
     $msgs = [];
     foreach ($user_input as $x) {
@@ -163,10 +169,10 @@ if ($path === '/api/chat' && $request_method === 'POST') {
     
     $system_msg = [
         'role' => 'system',
-        'content' => $txt . "\n\nAnswer the user using the company details above. Format the reply cleanly using markdown with bold headings and bullet points for readability. Keep it formal, helpful, and accurate."
+        'content' => $txt . "\n\nYou are the official AI assistant for SmarTech Solutions (smartechsolutions.in). Answer the user using the company details provided above. Format replies cleanly using markdown with bold headings and bullet points for readability. Keep replies concise, helpful, and accurate. When asked about pricing, custom quotes, or scheduling a demo, offer direct WhatsApp/phone contact at +91 9221204466 / 7506513784 or email smartech.009@gmail.com."
     ];
     
-    $models = ['qwen/qwen3.8-27b', 'groq/compound-mini'];
+    $models = ['openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'qwen/qwen3.8-27b'];
     $reply = null;
 
     foreach ($models as $model_name) {
@@ -475,6 +481,8 @@ $static_routes = [
     '/orderform.html' => 'orderform.html',
     '/qrvideo.html' => 'qrvideo.html',
     '/school-management-system.html' => 'school-management-system.html',
+    '/smartech-school-app.html' => 'smartech-school-app.html',
+    '/resort-digital-solution.html' => 'resort-digital-solution.html',
     '/robots.txt' => 'robots.txt',
     '/sitemap.xml' => 'sitemap.xml',
     '/dashboard.html' => 'dashboard.php',

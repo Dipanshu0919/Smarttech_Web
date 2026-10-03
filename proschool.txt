@@ -1,0 +1,91 @@
+PRO: Complete Smart-School Ecosystem
+High budget. Everything in Advanced, plus automation, AI, student access, fingerprint attendance, bus GPS tracking, school management tools, full legal compliance, and an inclusive experience for all families.
+
+Tabs:
+Common (on every screen)
+AI chatbot: A chat icon on every screen opens a chatbot inside the app that answers common questions 24/7. Example: Parent types: "What is the fee for Class 5?" Bot replies: "The annual fee for Class 5 is ₹85,000. For a detailed breakdown, visit our Fee Structure screen or WhatsApp us." This reduces after-hours calls to your office.
+Multi-language support: If your school serves families who speak Hindi, Marathi, Tamil, Bengali, etc., add a language switcher inside the app. Even just the admission form and fee structure in a second language goes a long way.
+Accessibility: Make sure the app works for people with disabilities:
+Screen reader support (TalkBack on Android) with descriptions on all images and buttons
+Proper color contrast (not light gray text on white background)
+Text that scales with the phone's font size setting
+Captions on videos
+
+Main Tabs:
+1. Home Tab
+2. About Tab
+Alumni section: Where have your former students gone? IIT, AIIMS, top companies, military? This shows long-term value.
+3. Academics Tab
+4. Admissions Tab
+Auto-receipt via WhatsApp: After payment, the receipt is sent automatically on WhatsApp as well as email, so parents have it instantly on the app they use most.
+5. Updates Tab
+6. Gallery Tab
+7. Portal Tab (Login Area)
+Parent Portal: extra features
+Late fee calculation: Late fee is calculated automatically on pending fees and shown in the fee statement.
+Teacher's notes: Especially for younger classes (Class 1-8). Like "Rahul was very active in class today" or "Please send the science project by Friday."
+Secure messaging with teachers: Timestamped, so there's a record.
+Settings > Delete my account and data: Right to erasure. If a parent asks to delete their data, the school must do it. This option lets the parent send the request from inside the app, and it goes through a proper workflow in the admin panel.
+Student Portal
+My attendance, homework, and marks: Students can view their own records.
+Study materials: Access study materials if you have a learning platform.
+Staff/Teacher Portal: extra features
+Communicate with parents: Message parents directly from the app.
+Fingerprint attendance (view and correct): Teachers see the attendance recorded by the fingerprint system for their class and can correct mistakes (for example, a student who forgot to scan).
+Promote to next class: Class teachers can prepare the promotion list for their class (see School Management below).
+Fingerprint Attendance System
+Fingerprint scanner at school: Fingerprint devices are installed at the school gate or in classrooms. Students and staff scan their fingerprint to mark attendance.
+Auto-sync with the app: Attendance goes to the app automatically as present, absent, or late. No manual marking by the teacher is needed.
+Instant alert to parents: The parent gets a notification, for example "Rahul reached school at 8:05 AM" or "Rahul is absent today."
+Reports: The admin and class teachers can see daily, weekly, and monthly attendance reports by class, and export them.
+Promote to Next Class System
+Select students with checkboxes: At the end of the year, the admin or class teacher opens a class and sees the list of all students with a checkbox next to each name. There is also a "Select all" option. Untick the students who should not be promoted (for example, those who failed or are detained).
+Choose the new class and section: After selecting, choose the class and section the students are moving to, and confirm.
+Records are kept: The previous year's attendance, marks, and report cards are saved in an archive, and the student starts the new year with a fresh record. Fee dues carry forward.
+Undo option: A promotion can be reversed within a few days if a mistake is made.
+Inventory
+Track school items and stock: Furniture, lab equipment, books, uniforms, stationery, sports items, and other assets. Each item has a name, quantity, location, and condition.
+Issue and return: Record who took an item and when it was returned. Example: sports kit given to a teacher, lab equipment given to a class.
+Low stock alerts: The admin gets an alert when an item falls below the minimum quantity, so it can be bought in time.
+Purchase records: Keep a record of purchases (item, quantity, date, supplier).
+8. Contact Tab
+Tender / procurement notices: If your school publishes any procurement or tender notices, keep them on a dedicated screen.
+9. School Bus (New)
+Interactive bus route map
+An interactive map inside the app showing bus routes, stops, and timings. This is a huge plus, because transport is one of the most asked questions by parents.
+Transportation and Tracking System (GPS)
+Live bus tracking: Parents see their child's bus moving on the map in real time, with the expected arrival time at their stop.
+Bus-based login: Every bus has its own login (bus number and password or OTP). The driver or conductor logs in on a phone kept in the bus. While logged in, the phone sends the bus's GPS location to the app. Each bus sees only its own route and students.
+Trip alerts to parents: Parents get a notification such as "Bus has started", "Bus is 5 minutes away from your stop", and "Bus has reached school."
+Route and student assignment: The admin assigns every student to a bus and a stop from the admin panel. Parents see only their own child's bus.
+Admin view: The school office sees all buses on one map, and which ones are running, late, or stopped.
+
+Not in a Tab (Delivery & Backend)
+Delivery (Google Play Store, automatic updates, phone and tablet layouts), the Web Admin Panel (CMS), and form protection stay the same as Advanced.
+Web Admin Panel / CMS: extra in Pro
+In addition to everything in Advanced, the office can manage from the website:
+Student promotion to the next class
+Inventory items, stock, and purchases
+Bus routes, stops, student-to-bus assignment, and the live map of all buses
+Fingerprint attendance reports and corrections
+Alumni records and tender/procurement notices
+Data deletion requests from parents
+Safety, Privacy & Legal
+Full DPDP Act 2023 compliance: On top of consent management from Advanced:
+Right to erasure: if a parent asks to delete their data, you must do it, with a proper workflow (including a "delete my account and data" option inside the app)
+Data processor disclosure: if you share data with third parties (like a fee payment gateway, WhatsApp provider, or SMS provider), disclose it
+Backend
+App analytics: A free tool like Firebase Analytics. It tells you:
+How many people installed and use the app
+Which screens they viewed
+Where they dropped off in the admission form
+What device they used (phone/tablet)
+This helps you improve the app based on real data.
+
+Notes
+Fingerprint scanners and the GPS phones or devices for buses are hardware. Their cost is not included in the app price, so quote it separately.
+Fingerprints are sensitive data, and the data of children needs the parent's consent under the DPDP Act. Take written consent from parents before enrolling a student's fingerprint, and state it in the privacy policy.
+Live GPS tracking runs continuously, so it increases the monthly server cost. Price it separately.
+Android's bottom bar shows 5 tabs at most. In Pro, keep Home, Updates, Portal, and Transport as bottom tabs, with the rest under "More". The Home quick-action buttons already link to Apply Now, so Admissions can sit under "More".
+
+

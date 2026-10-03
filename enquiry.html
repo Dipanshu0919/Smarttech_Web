@@ -439,6 +439,19 @@
         const submitBtn = document.getElementById("submitBtn");
         const formStatus = document.getElementById("formStatus");
 
+        // Auto pre-fill message if plan/service param is in URL
+        function applyUrlEnquiryPrefill() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const reqPlan = urlParams.get("plan") || urlParams.get("service") || urlParams.get("order");
+            const messageBox = document.getElementById("message");
+            if (reqPlan && messageBox && !messageBox.value.trim()) {
+                messageBox.value = `Hello SmarTech Solutions, I am interested in ${decodeURIComponent(reqPlan)}. Please share details, pricing, and next steps.`;
+                messageBox.style.borderColor = "var(--green-main)";
+            }
+        }
+        applyUrlEnquiryPrefill();
+        window.addEventListener("DOMContentLoaded", applyUrlEnquiryPrefill);
+
         function setStatus(message, type) {
             formStatus.textContent = message;
             formStatus.className = `status ${type || ""}`.trim();

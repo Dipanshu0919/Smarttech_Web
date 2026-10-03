@@ -495,11 +495,16 @@
                                 <label for="orderFor">Order For</label>
                                 <select id="orderFor" name="order_for" required>
                                     <option value="" disabled selected>Select an option</option>
+                                    <option value="School App - Basic Plan">School App - Basic Plan</option>
+                                    <option value="School App - Advanced Plan">School App - Advanced Plan (Admissions &amp; Portals)</option>
+                                    <option value="School App - Pro Plan">School App - Pro Plan (Smart Ecosystem &amp; GPS)</option>
+                                    <option value="Resort Digital Solution - Basic Plan">Resort Digital Solution - Basic Plan</option>
+                                    <option value="Resort Digital Solution - Advanced Plan">Resort Digital Solution - Advanced Plan (Revisit + WP)</option>
+                                    <option value="Resort Digital Solution - Pro Plan">Resort Digital Solution - Pro Plan (Full Experience)</option>
                                     <option value="Grampanchayat Android Application">Grampanchayat Android Application</option>
                                     <option value="Grampanchayat ISO">Grampanchayat ISO Certification</option>
                                     <option value="Grampanchayat Website">Grampanchayat Website</option>
                                     <option value="QR Code for Each Home">QR Code for Each Home</option>
-                                    <option value="School App">School App</option>
                                 </select>
                             </div>
 
@@ -588,6 +593,55 @@
         const attachmentName = document.getElementById("attachmentName");
         const attachmentRemove = document.getElementById("attachmentRemove");
         const MAX_ATTACHMENT_BYTES = 25 * 1024 * 1024;
+
+        // Auto-select order option from URL parameter (?order=... or ?plan=... or ?service=...)
+        function applyUrlOrderSelection() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const requestedOrder = urlParams.get("order") || urlParams.get("plan") || urlParams.get("service");
+            const orderSelect = document.getElementById("orderFor");
+            const remarkArea = document.getElementById("remark");
+            if (requestedOrder && orderSelect) {
+                const reqLower = decodeURIComponent(requestedOrder).toLowerCase().trim();
+                let matchedIndex = -1;
+
+                // 1. Direct or partial substring match
+                for (let i = 0; i < orderSelect.options.length; i++) {
+                    const optVal = orderSelect.options[i].value.toLowerCase();
+                    const optText = orderSelect.options[i].text.toLowerCase();
+                    if (optVal && (optVal === reqLower || optVal.includes(reqLower) || reqLower.includes(optVal) || optText.includes(reqLower) || reqLower.includes(optText))) {
+                        matchedIndex = i;
+                        break;
+                    }
+                }
+
+                // 2. Fuzzy keyword match for School App and Resort Solutions
+                if (matchedIndex === -1) {
+                    if (reqLower.includes("school")) {
+                        if (reqLower.includes("pro")) matchedIndex = Array.from(orderSelect.options).findIndex(o => o.value.includes("School App - Pro"));
+                        else if (reqLower.includes("adv")) matchedIndex = Array.from(orderSelect.options).findIndex(o => o.value.includes("School App - Advanced"));
+                        else if (reqLower.includes("basic")) matchedIndex = Array.from(orderSelect.options).findIndex(o => o.value.includes("School App - Basic"));
+                    } else if (reqLower.includes("resort")) {
+                        if (reqLower.includes("pro")) matchedIndex = Array.from(orderSelect.options).findIndex(o => o.value.includes("Resort Digital Solution - Pro"));
+                        else if (reqLower.includes("adv")) matchedIndex = Array.from(orderSelect.options).findIndex(o => o.value.includes("Resort Digital Solution - Advanced"));
+                        else if (reqLower.includes("basic")) matchedIndex = Array.from(orderSelect.options).findIndex(o => o.value.includes("Resort Digital Solution - Basic"));
+                    }
+                }
+
+                if (matchedIndex > 0) {
+                    orderSelect.selectedIndex = matchedIndex;
+                    orderSelect.value = orderSelect.options[matchedIndex].value;
+                    orderSelect.style.borderColor = "var(--green-main)";
+                    orderSelect.style.boxShadow = "0 0 0 3px rgba(34, 139, 34, 0.2)";
+                    orderSelect.dispatchEvent(new Event("change"));
+
+                    if (remarkArea && !remarkArea.value.trim()) {
+                        remarkArea.value = `Order inquiry for ${orderSelect.options[matchedIndex].value}. Please share implementation timeline and pricing.`;
+                    }
+                }
+            }
+        }
+        applyUrlOrderSelection();
+        window.addEventListener("DOMContentLoaded", applyUrlOrderSelection);
 
         function formatFileSize(bytes) {
             if (!Number.isFinite(bytes) || bytes <= 0) {

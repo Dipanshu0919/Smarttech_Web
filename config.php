@@ -11,7 +11,7 @@ define('ADMIN_MGMT_USERNAME', 'admin');
 define('ADMIN_MGMT_PASSWORD', 'admin123');
 
 // Groq API Configuration
-define('GROQ_API_KEY', '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');
+define('GROQ_API_KEY', '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');
 
 // Base paths
 define('BASE_DIR', __DIR__);

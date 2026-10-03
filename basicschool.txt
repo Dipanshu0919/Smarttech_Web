@@ -1,0 +1,42 @@
+Tabs:
+Common: 
+Floating WhatsApp button A green WhatsApp icon at the bottom-right corner of every screen. 
+
+Main Tabs:
+
+Home Tab
+ School identity Your school's logo, name, motto, and colors should be visible the moment someone opens the app: on the app icon, the splash screen (the first screen while the app loads), and the home screen. This builds instant recognition.
+Principal's message: A short note from the principal with their photo and qualifications. 
+
+About
+Our story: The history of the school: when it was started, why, and what it stands for.
+Principal's message: A short note from the principal with their photo and qualifications. 
+School affiliations & certifications Display your CBSE/ICSE/State Board affiliation number, ISO certification, and any other awards. This is proof that your school is legitimate and recognized.
+FAQ (Frequently Asked Questions) section Only the questions whose answers don't change year to year:
+
+Academics
+Curriculum overview A general description of the board and teaching approach (CBSE/ICSE/State Board), with a link to the official board syllabus. Parents want to know what their child is learning. Class-wise detailed syllabus moves to Advanced.
+Extracurricular activities List all activities: sports, music, art, debate, coding, yoga, science club, with photos. This shows the school is not just about books. (Schedules move to Advanced.)
+Library How many books? Digital access? Reading programs? A short screen with photos.
+Labs & facilities Science labs, computer labs, art room, auditorium, playground. Photos of each facility. Parents want to see the infrastructure.
+Digital learning platform link If you use Google Classroom, BYJU'S, or any LMS, link it from the app.
+
+Gallery
+Good quality photos Use real photos of your school: classrooms, labs, playground, canteen, buses, students during sports day. Don't use random stock photos from the internet. Parents can tell the difference.
+Campus photo gallery (with privacy controls) A fixed gallery of campus photos: building, classrooms, labs, playground, canteen, buses. Get parent consent before posting photos of their children. Have an opt-out option. This is legally important under the DPDP Act. Event-wise and year-wise galleries come in Advanced because they keep growing.
+
+Contact
+“How to apply" screen Since there is no online form in Basic, this screen explains the general process: the steps to apply, the documents needed (Aadhaar, birth certificate, photo), and whom to call or WhatsApp. It does not show fees or dates, since those change every year.
+Social media links Icons linking to your Instagram, YouTube, and Facebook pages. They open the social app or browser. Show your school's social presence. (Live feeds inside the app come in Advanced.)
+Child privacy policy Clearly state: How do you use student photos? What data do you collect? Who has access? Parents must be able to opt out of having their child's photo in the app. The Basic app itself collects no personal data and has no login.
+Anti-bullying & anti-ragging policy State it clearly in the app. Include how to file a complaint and who to contact. This builds trust with parents.
+Grievance redressal How does a parent raise a complaint? Who handles it? What is the response time? Be specific. (Complaints go by phone, email, or WhatsApp in Basic.)
+Code of conduct For students, parents, and staff. Keep it simple and readable.
+Contact screen
+Full address with a button that opens Google Maps for directions
+Phone number (tap to call)
+Email address (tap to send)
+WhatsApp number
+Emergency contact number (principal's direct line, security, first-aid). Make this visible, not buried.
+Office hours can be added if they rarely change.
+
