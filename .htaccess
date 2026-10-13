@@ -1,0 +1,27 @@
+# Protect sensitive files from direct web access
+<FilesMatch "^(secrets\.php|\.env|.*\.sqlite|.*\.db)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+
+# Deliver assets directly even if requested from /blog/
+RewriteRule ^blog/(assets/.*)$ $1 [L,QSA]
+
+# Route blog post slugs
+RewriteRule ^blog/([a-zA-Z0-9-]+)/?$ blog-post.php?slug=$1 [L,QSA]
+RewriteRule ^blog/?$ blog.php [L,QSA]
+
+# Deliver existing files directly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [L]
+</IfModule>

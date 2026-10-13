@@ -1056,7 +1056,7 @@ $admin_management_link_visible = isset($_SESSION['superadmin_access']) && $_SESS
                                     <!-- Attached Image Pills -->
                                     <div class="palette-group" id="attachedImagePillsGroup">
                                         <span class="group-label">Images:</span>
-                                        <button type="button" class="placeholder-pill" onclick="insertRawPlaceholder('{{ image_link: https://example.com/image.jpg | Visual Caption }}\n\n')">+ {{ image_link }}</button>
+                                        <button type="button" class="placeholder-pill" onclick="promptImageLink()">+ {{ image_link }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -1355,6 +1355,16 @@ $admin_management_link_visible = isset($_SESSION['superadmin_access']) && $_SESS
             capInput.value = '';
         }
 
+        function promptImageLink() {
+            const url = prompt('Enter image URL (e.g., https://yourdomain.com/photo.jpg):');
+            if (!url || !url.trim()) return;
+            const cap = prompt('Optional caption (or press Enter to skip):');
+            let tag = `{{ image_link: ${url.trim()}`;
+            if (cap && cap.trim()) tag += ` | ${cap.trim()}`;
+            tag += ` }}\n\n`;
+            insertRawPlaceholder(tag);
+        }
+
         // Multi-image upload at top of editor
         function handleMultipleImageUpload(files) {
             if (!files || files.length === 0) return;
@@ -1375,13 +1385,17 @@ $admin_management_link_visible = isset($_SESSION['superadmin_access']) && $_SESS
                 .then(res => res.json())
                 .then(data => {
                     if (data.success && data.url) {
+                        let imgUrl = data.url;
+                        if (imgUrl && !imgUrl.startsWith('http://') && !imgUrl.startsWith('https://') && !imgUrl.startsWith('/')) {
+                            imgUrl = '/' + imgUrl;
+                        }
                         // Determine next sequential key: image_1, image_2, etc.
                         let nextIndex = 1;
                         while (attachedImages['image_' + nextIndex]) {
                             nextIndex++;
                         }
                         const key = 'image_' + nextIndex;
-                        attachedImages[key] = data.url;
+                        attachedImages[key] = imgUrl;
                         renderAttachedImages();
                         updateLivePreview();
                     } else {
@@ -1439,7 +1453,7 @@ $admin_management_link_visible = isset($_SESSION['superadmin_access']) && $_SESS
             if (pillsGroup) {
                 pillsGroup.innerHTML = `
                     <span class="group-label">Images:</span>
-                    <button type="button" class="placeholder-pill" onclick="insertRawPlaceholder('{{ image_link: https://example.com/image.jpg | Caption }}\\n\\n')">+ {{ image_link }}</button>
+                    <button type="button" class="placeholder-pill" onclick="promptImageLink()">+ {{ image_link }}</button>
                 `;
             }
 
@@ -1543,16 +1557,22 @@ $admin_management_link_visible = isset($_SESSION['superadmin_access']) && $_SESS
             // Attached sequential images {{ image_1 }}, {{ image_2 }}...
             text = text.replace(/\{\{\s*(image_\d+)(?:\s*\|\s*([^}]+))?\s*\}\}/gi, (m, tag, cap) => {
                 const k = tag.toLowerCase().trim();
-                const src = imagesMap[k];
+                let src = imagesMap[k];
                 if (!src) return `<div class="blog-img-missing"><span>[Attached placeholder ${escapeHtml(k)} pending upload]</span></div>`;
+                if (!src.startsWith('http://') && !src.startsWith('https://') && !src.startsWith('/')) {
+                    src = '/' + src;
+                }
                 const c = cap ? `<figcaption class="blog-fig-caption">${escapeHtml(cap.trim())}</figcaption>` : '';
                 return `<figure class="blog-figure"><img src="${escapeHtml(src)}" class="blog-responsive-img" alt="Uploaded Visual">${c}</figure>`;
             });
 
             // Generic {{ image }}
             text = text.replace(/\{\{\s*image(?:\s*\|\s*([^}]+))?\s*\}\}/gi, (m, cap) => {
-                const first = Object.values(imagesMap)[0];
+                let first = Object.values(imagesMap)[0];
                 if (!first) return `<div class="blog-img-missing"><span>[No image attached]</span></div>`;
+                if (!first.startsWith('http://') && !first.startsWith('https://') && !first.startsWith('/')) {
+                    first = '/' + first;
+                }
                 const c = cap ? `<figcaption class="blog-fig-caption">${escapeHtml(cap.trim())}</figcaption>` : '';
                 return `<figure class="blog-figure"><img src="${escapeHtml(first)}" class="blog-responsive-img" alt="Uploaded Visual">${c}</figure>`;
             });

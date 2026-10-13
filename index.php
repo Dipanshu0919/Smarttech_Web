@@ -150,6 +150,11 @@ if (basename($path) === 'index.php' || $path === '/index.php') {
     $path = '/';
 }
 
+// Normalize any sub-path asset request like /blog/assets/... to /assets/...
+if (preg_match('#^/blog/(assets/.*)$#', $path, $m)) {
+    $path = '/' . $m[1];
+}
+
 if ($path === '/api/chat' && $request_method === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true);
     $user_input = $input['messages'] ?? [];
@@ -653,6 +658,7 @@ if (strpos($path, '/assets/') === 0) {
             'png' => 'image/png',
             'jpg' => 'image/jpeg',
             'jpeg' => 'image/jpeg',
+            'webp' => 'image/webp',
             'gif' => 'image/gif',
             'svg' => 'image/svg+xml',
             'pdf' => 'application/pdf'

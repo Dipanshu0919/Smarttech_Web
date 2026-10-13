@@ -108,42 +108,58 @@ $shareUrl = $post ? 'https://smartechsolutions.in/blog/' . htmlspecialchars($pos
         }
 
         main {
-            padding: 2.5rem 1.5rem 4.5rem;
+            margin-left: 250px;
+            padding: 2.5rem 2.5rem 5rem;
             position: relative;
+            min-height: 100vh;
+            background-color: var(--bg-light);
+        }
+
+        @media (max-width: 992px) {
+            main {
+                margin-left: 0;
+                padding: 1.5rem 1rem 3.5rem;
+                padding-top: 85px;
+            }
         }
 
         .article-container {
-            max-width: 920px;
+            max-width: 960px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 2rem;
+            gap: 1.5rem;
+            width: 100%;
         }
 
-        /* --- Breadcrumb --- */
-        .breadcrumb {
+        /* --- Breadcrumb Bar --- */
+        .breadcrumb-bar {
             display: flex;
+            flex-direction: row !important;
             align-items: center;
             gap: 0.5rem;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             color: var(--text-soft);
             flex-wrap: wrap;
+            padding: 0.2rem 0;
+            width: 100%;
         }
 
-        .breadcrumb a {
+        .breadcrumb-bar a {
             color: var(--green-dark);
             text-decoration: none;
             font-weight: 700;
         }
 
-        .breadcrumb a:hover {
+        .breadcrumb-bar a:hover {
             text-decoration: underline;
         }
 
-        .breadcrumb svg {
+        .breadcrumb-bar svg {
             width: 14px;
             height: 14px;
             fill: var(--text-soft);
+            flex-shrink: 0;
         }
 
         /* --- Article Card Wrap --- */
@@ -152,17 +168,23 @@ $shareUrl = $post ? 'https://smartechsolutions.in/blog/' . htmlspecialchars($pos
             border-radius: 28px;
             border: 1px solid var(--border);
             box-shadow: var(--shadow);
-            padding: 3rem 3rem;
+            padding: 2.8rem 3rem;
             overflow: hidden;
+            width: 100%;
         }
 
         .article-header {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.1rem;
             margin-bottom: 2rem;
-            border-bottom: 1px solid rgba(34, 139, 34, 0.1);
-            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(34, 139, 34, 0.12);
+            padding-bottom: 1.8rem;
+            position: static !important;
+            width: 100% !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            z-index: auto !important;
         }
 
         .category-pill {
@@ -180,9 +202,9 @@ $shareUrl = $post ? 'https://smartechsolutions.in/blog/' . htmlspecialchars($pos
 
         .article-title {
             margin: 0;
-            font-size: clamp(2rem, 3.8vw, 2.8rem);
+            font-size: clamp(2rem, 3.6vw, 2.8rem);
             color: var(--green-dark);
-            line-height: 1.2;
+            line-height: 1.22;
             letter-spacing: -0.03em;
             font-weight: 800;
         }
@@ -192,20 +214,22 @@ $shareUrl = $post ? 'https://smartechsolutions.in/blog/' . htmlspecialchars($pos
             align-items: center;
             gap: 1.5rem;
             color: var(--text-soft);
-            font-size: 0.92rem;
+            font-size: 0.95rem;
             flex-wrap: wrap;
         }
 
         .meta-item {
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.45rem;
+            font-weight: 600;
         }
 
         .meta-item svg {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             fill: var(--green-main);
+            flex-shrink: 0;
         }
 
         .featured-banner {
@@ -619,24 +643,29 @@ $shareUrl = $post ? 'https://smartechsolutions.in/blog/' . htmlspecialchars($pos
 
 <body>
     <!-- Sidebar nav partial -->
-    <div hx-get="/partials/header.html" hx-trigger="load" hx-swap="outerHTML"></div>
+    <?php require_once 'partials/header.php'; ?>
 
     <main>
         <div class="article-container">
             <!-- Breadcrumbs -->
-            <nav class="breadcrumb" aria-label="Breadcrumb">
+            <div class="breadcrumb-bar" aria-label="Breadcrumb">
                 <a href="/">Home</a>
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
                 <a href="/blog.html">Blog</a>
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
                 <span><?= $post ? htmlspecialchars($post['title']) : 'Article' ?></span>
-            </nav>
+            </div>
 
-            <?php if ($post): ?>
+            <?php if ($post): 
+                // Strip redundant leading title from body content so it appears once cleanly on top
+                $renderedContent = $post['content'];
+                $renderedContent = preg_replace('/^\s*\{\{\s*title\s*\}\}[\s\S]*?\{\{\s*\/title\s*\}\}\s*/i', '', $renderedContent);
+                $renderedContent = preg_replace('/^\s*\{\{\s*title\s*:[^}\n]+\}\}\s*/i', '', $renderedContent);
+            ?>
                 <article class="article-card">
-                    <!-- Article Header -->
-                    <header class="article-header">
-                        <span class="category-pill"><?= htmlspecialchars($post['category'] ?? 'Technology') ?></span>
+                    <!-- Top Article Header (Category, Title, Author & Timing on Top) -->
+                    <div class="article-header">
+                        <div class="category-pill"><?= htmlspecialchars($post['category'] ?? 'Technology') ?></div>
                         <h1 class="article-title"><?= htmlspecialchars($post['title']) ?></h1>
                         <div class="meta-strip">
                             <span class="meta-item">
@@ -652,7 +681,7 @@ $shareUrl = $post ? 'https://smartechsolutions.in/blog/' . htmlspecialchars($pos
                                 <?= $readTime ?> min read
                             </span>
                         </div>
-                    </header>
+                    </div>
 
                     <!-- Featured Image Banner -->
                     <?php if (!empty($post['featured_image'])): ?>
@@ -663,7 +692,7 @@ $shareUrl = $post ? 'https://smartechsolutions.in/blog/' . htmlspecialchars($pos
 
                     <!-- Parsed Article Body with all custom placeholders -->
                     <div class="article-content">
-                        <?= parseBlogPlaceholders($post['content'], $post['images_json']) ?>
+                        <?= parseBlogPlaceholders($renderedContent, $post['images_json']) ?>
                     </div>
 
                     <!-- Social Sharing Section -->
@@ -730,8 +759,8 @@ $shareUrl = $post ? 'https://smartechsolutions.in/blog/' . htmlspecialchars($pos
     </main>
 
     <!-- Footer & Chat partials -->
-    <div hx-get="/partials/footer.html" hx-trigger="load" hx-swap="outerHTML"></div>
-    <div hx-get="/partials/aichat.html" hx-trigger="load" hx-swap="outerHTML"></div>
+    <?php require_once 'partials/aichat.php'; ?>
+    <?php require_once 'partials/footer.php'; ?>
 
     <script>
         (function() {

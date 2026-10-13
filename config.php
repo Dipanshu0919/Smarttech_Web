@@ -1,17 +1,21 @@
 <?php
+// Load private secrets file if available
+$secretsFile = __DIR__ . '/secrets.php';
+$secrets = file_exists($secretsFile) ? (require $secretsFile) : [];
+
 // Database Configuration
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'smartec2_smartechweb');
-define('DB_USER', 'smartbqc_abitghar');
-define('DB_PASS', 'Bunty@123');
+define('DB_HOST', getenv('DB_HOST') ?: ($secrets['DB_HOST'] ?? 'localhost'));
+define('DB_NAME', getenv('DB_NAME') ?: ($secrets['DB_NAME'] ?? 'smartec2_smartechweb'));
+define('DB_USER', getenv('DB_USER') ?: ($secrets['DB_USER'] ?? 'smartbqc_abitghar'));
+define('DB_PASS', getenv('DB_PASS') ?: ($secrets['DB_PASS'] ?? ''));
 
 // Application Configuration
-define('APP_SECRET_KEY', 'secretkey');
-define('ADMIN_MGMT_USERNAME', 'admin');
-define('ADMIN_MGMT_PASSWORD', 'admin123');
+define('APP_SECRET_KEY', getenv('APP_SECRET_KEY') ?: ($secrets['APP_SECRET_KEY'] ?? 'secretkey'));
+define('ADMIN_MGMT_USERNAME', getenv('ADMIN_MGMT_USERNAME') ?: ($secrets['ADMIN_MGMT_USERNAME'] ?? 'admin'));
+define('ADMIN_MGMT_PASSWORD', getenv('ADMIN_MGMT_PASSWORD') ?: ($secrets['ADMIN_MGMT_PASSWORD'] ?? ''));
 
 // Groq API Configuration
-define('GROQ_API_KEY', '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');
+define('GROQ_API_KEY', getenv('GROQ_API_KEY') ?: ($secrets['GROQ_API_KEY'] ?? ''));
 
 // Base paths
 define('BASE_DIR', __DIR__);
@@ -114,18 +118,22 @@ function initDatabaseTables($pdo, $is_sqlite = false) {
 function getDB() {
     static $pdo = null;
     if ($pdo === null) {
-        try {
-            $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
-            $pdo = new PDO($dsn, DB_USER, DB_PASS, [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES => false
-            ]);
-            initDatabaseTables($pdo, false);
-        } catch (Exception $e) {
-            require_once BASE_DIR . '/database-adapter.php';
-            $pdo = new JsonPDO(BASE_DIR . '/database.json');
+        $sqlitePath = BASE_DIR . '/database.sqlite';
+        if (extension_loaded('pdo_sqlite')) {
+            try {
+                $pdo = new PDO("sqlite:" . $sqlitePath, null, null, [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+                ]);
+            } catch (Exception $e) {
+                require_once BASE_DIR . '/sqlite-adapter.php';
+                $pdo = new SqliteCliPDO($sqlitePath);
+            }
+        } else {
+            require_once BASE_DIR . '/sqlite-adapter.php';
+            $pdo = new SqliteCliPDO($sqlitePath);
         }
+        initDatabaseTables($pdo, true);
     }
     return $pdo;
 }

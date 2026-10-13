@@ -68,8 +68,18 @@ $blogs = get_all_blogs(true); // Fetch published blogs
         }
 
         main {
-            padding: 3rem 2rem 4rem;
+            margin-left: 250px;
+            padding: 3rem 2.5rem 4rem;
             position: relative;
+            min-height: 100vh;
+        }
+
+        @media (max-width: 992px) {
+            main {
+                margin-left: 0;
+                padding: 1.8rem 1rem 3rem;
+                padding-top: 85px;
+            }
         }
 
         .page-wrap {
@@ -437,7 +447,7 @@ $blogs = get_all_blogs(true); // Fetch published blogs
 
 <body>
     <!-- Navigation Sidebar from partial -->
-    <div hx-get="partials/header.html" hx-trigger="load" hx-swap="outerHTML"></div>
+    <?php require_once 'partials/header.php'; ?>
 
     <main>
         <div class="page-wrap">
@@ -531,8 +541,8 @@ $blogs = get_all_blogs(true); // Fetch published blogs
     </main>
 
     <!-- Footer & Chat partials -->
-    <div hx-get="partials/footer.html" hx-trigger="load" hx-swap="outerHTML"></div>
-    <div hx-get="partials/aichat.html" hx-trigger="load" hx-swap="outerHTML"></div>
+    <?php require_once 'partials/aichat.php'; ?>
+    <?php require_once 'partials/footer.php'; ?>
 
     <script>
         // Interactive Client-Side Category Filtering & Instant Search

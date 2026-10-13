@@ -98,6 +98,11 @@ function parseBlogPlaceholders($content, $imagesMap = []) {
             return '<div class="blog-img-missing"><span>[Image placeholder ' . htmlspecialchars($key) . ' not attached]</span></div>';
         }
 
+        // Ensure root-relative or absolute URL so it resolves on /blog/{slug}
+        if (!preg_match('#^(https?://|/)#i', $src)) {
+            $src = '/' . ltrim($src, '/');
+        }
+
         $capHtml = $caption ? '<figcaption class="blog-fig-caption">' . htmlspecialchars($caption) . '</figcaption>' : '';
         return '<figure class="blog-figure"><img src="' . htmlspecialchars($src) . '" alt="' . htmlspecialchars($caption ?: 'Blog illustration') . '" class="blog-responsive-img" loading="lazy">' . $capHtml . '</figure>';
     }, $text);
@@ -109,6 +114,12 @@ function parseBlogPlaceholders($content, $imagesMap = []) {
         if (!$src) {
             return '<div class="blog-img-missing"><span>[Image placeholder not attached]</span></div>';
         }
+
+        // Ensure root-relative or absolute URL so it resolves on /blog/{slug}
+        if (!preg_match('#^(https?://|/)#i', $src)) {
+            $src = '/' . ltrim($src, '/');
+        }
+
         $capHtml = $caption ? '<figcaption class="blog-fig-caption">' . htmlspecialchars($caption) . '</figcaption>' : '';
         return '<figure class="blog-figure"><img src="' . htmlspecialchars($src) . '" alt="' . htmlspecialchars($caption ?: 'Blog visual') . '" class="blog-responsive-img" loading="lazy">' . $capHtml . '</figure>';
     }, $text);
@@ -290,6 +301,6 @@ function handle_blog_image_upload($file) {
         throw new RuntimeException('Failed to move uploaded image.');
     }
 
-    return 'assets/blog_images/' . $safeName;
+    return '/assets/blog_images/' . $safeName;
 }
 
