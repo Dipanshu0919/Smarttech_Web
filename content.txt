@@ -411,3 +411,10 @@ Ordering & Contact Information:
 - Online Order Form: orderform.html
 - General Enquiry Form: enquiry.html
 - Working Hours: Monday to Saturday, 9:30 AM to 6:30 PM IST
+
+-----
+SmarTech Blog & Knowledge Hub:
+- Public Blog Page: /blog.html (or /blog)
+- Single Article URL Pattern: /blog/{slug}
+- Features: Tech guides, School ERP solutions, Resort app guides, Digital Grampanchayat updates, and custom software insights.
+- Admin Management: Integrated in dashboard.php with real-time live preview, multi-image upload with auto-generated placeholder tags ({{ image_1 }}, {{ image_2 }}), tap-to-paste placeholder palette, and full custom formatting engine.

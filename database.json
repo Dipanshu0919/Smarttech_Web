@@ -1,0 +1,42 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "username": "admin",
+            "password": "admin123",
+            "timestamp": "2026-10-13 11:29:51"
+        }
+    ],
+    "orders": [],
+    "enquiries": [],
+    "blogs": [
+        {
+            "id": 1,
+            "title": "How Next-Gen Digital Solutions Are Transforming Education and Administration",
+            "slug": "how-next-gen-digital-solutions-transforming-education",
+            "meta_description": "Discover how SmarTech Solutions empowers schools and enterprises with integrated mobile applications, parent portals, and real-time communication.",
+            "author": "SmarTech Team",
+            "category": "School ERP",
+            "featured_image": "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80",
+            "content": "{{ title }}How Next-Gen Digital Solutions Are Transforming Education and Administration{{ /title }}\n\n{{ h2 }}The Shift Toward Digital-First Institutions{{ /h2 }}\nModern educational institutions and regional administrations require speed, precision, and seamless accessibility. The traditional reliance on paper registers, fragmented circulars, and manual bookkeeping is rapidly being replaced by cloud-integrated mobile ecosystems.\n\n{{ callout: Essential Transformation | By centralizing records, notifications, and fees into a single mobile dashboard, schools can reduce administrative overhead by over 60%. }}\n\n{{ image_1 | Interactive digital learning and classroom management }}\n\n{{ h3 }}Core Pillars of Modern School Apps{{ /h3 }}\nAn all-in-one school management system connects four vital stakeholders: administrators, teachers, students, and parents.\n\n{{ bullet }}Live Attendance Tracking with automated notifications for parents{{ /bullet }}\n{{ bullet }}Integrated Online Admissions with document uploads and instant receipt generation{{ /bullet }}\n{{ bullet }}Direct WhatsApp & Push Notifications for emergency announcements and exam timetables{{ /bullet }}\n{{ bullet }}DPDP Act 2023 Compliant privacy architectures protecting student information{{ /bullet }}\n\n{{ divider }}\n\n{{ h3 }}Bridging the Communication Gap{{ /h3 }}\nParents today want instant, transparent insights into their child's academic progress, fee schedules, and upcoming events. With dedicated mobile applications, schools eliminate communication breakdowns and build trust.\n\n{{ tip }}Tip: Schools adopting dedicated parent mobile apps report a 95% on-time fee submission rate through integrated UPI and digital receipts.{{ /tip }}\n\n{{ quote }}Empowering educators and administrators with reliable technology is the cornerstone of sustainable academic excellence.{{ /quote }}\n\n{{ button: Explore Our School App Solution | /smartech-school-app.html }}",
+            "images_json": "{\"image_1\":\"https:\\/\\/images.unsplash.com\\/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1000&q=80\"}",
+            "status": "published",
+            "created_at": "2026-10-13 11:30:46",
+            "updated_at": "2026-10-13 11:30:46"
+        },
+        {
+            "id": 2,
+            "title": "Test",
+            "slug": "test",
+            "meta_description": "test test test",
+            "author": "SmarTech Team Test",
+            "category": "School ERP",
+            "featured_image": "",
+            "content": "{{ title }}Post Main Title{{ /title }}\n{{ h1 }}Heading 1{{ /h1 }}\n{{ h2 }}Heading 2{{ /h2 }}\n{{ h3 }}Heading 3{{ /h3 }}\n{{ h4 }}Heading 4{{ /h4 }}\n{{ h5 }}Heading 5{{ /h5 }}\n{{ h6 }}Heading 6{{ /h6 }}\n\n{{ bold }}Bold text{{ /bold }}\n{{ italic }} {{ bold}} Italic Bold text{{ /italic }} {{ /bold }}\n{{ underline }}Underlined text{{ /underline }}\n{{ highlight }}Highlighted text{{ /highlight }}\n\n{{ bullet }}Key feature bullet item{{ /bullet }}\n{{ bullet }}Key feature bullet item{{ /bullet }}\n{{ number }}hi{{ /number }}\n{{ quote }}Transforming organizations through technology.{{ /quote }}\n{{ code }}SELECT * FROM solutions;{{ /code }}\n{{ divider }}\n\n{{ divider }}\n\n{{ callout: Key Advantage | Centralized data saves 60% operational time. }}\n\n{{ callout: Key Advantage | Centralized data saves 60% operational time. }}\n\n{{ tip }}Pro Tip: Regular notifications increase parent engagement.{{ /tip }}\n\n{{ button: Explore Solutions | /smartech-school-app.html }}\n\n{{ link: Contact Our Team | /enquiry.html }}\n\n{{ image_link: https://example.com/image.jpg | Caption }}\n\n{{ image_1 }}\n\n{{ image_2 }}\n\n{{ image_3 }}",
+            "images_json": "{\"image_1\":\"assets/blog_images/blog_1791891779_0ca05739ed89.jpeg\",\"image_2\":\"assets/blog_images/blog_1791891779_474b1472c8c7.jpeg\",\"image_3\":\"assets/blog_images/blog_1791891779_03680c78462f.jpeg\",\"image_4\":\"assets/blog_images/blog_1791891779_36cf85c07c17.jpeg\",\"image_5\":\"assets/blog_images/blog_1791891779_080730036c18.jpeg\"}",
+            "status": "published",
+            "created_at": "2026-10-13 11:46:11",
+            "updated_at": "2026-10-13 11:46:11"
+        }
+    ]
+}

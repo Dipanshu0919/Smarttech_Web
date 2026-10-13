@@ -1,5 +1,6 @@
 <?php
 require_once 'config.php';
+require_once 'blog-engine.php';
 
 if (!is_dir(ORDER_FILES_DIR)) {
     mkdir(ORDER_FILES_DIR, 0777, true);
@@ -269,6 +270,98 @@ if ($path === '/api/dashboard/enquiries' && $request_method === 'GET') {
     send_json(['enquiries' => fetch_rows('enquiries')]);
 }
 
+if ($path === '/api/blog/save' && $request_method === 'POST') {
+    adminRequired();
+    $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+    if (strpos($contentType, 'application/json') !== false) {
+        $data = json_decode(file_get_contents('php://input'), true) ?: [];
+    } else {
+        $data = $_POST;
+    }
+
+    try {
+        $id = save_blog_post($data);
+        $saved = get_blog_by_id($id);
+        send_json([
+            'success' => true,
+            'id' => $id,
+            'slug' => $saved['slug'] ?? '',
+            'message' => 'Blog post saved successfully.'
+        ]);
+    } catch (Exception $e) {
+        send_json(['error' => $e->getMessage()], 400);
+    }
+}
+
+if ($path === '/api/blog/delete' && $request_method === 'POST') {
+    adminRequired();
+    $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+    if (strpos($contentType, 'application/json') !== false) {
+        $data = json_decode(file_get_contents('php://input'), true) ?: [];
+        $id = $data['id'] ?? 0;
+    } else {
+        $id = $_POST['id'] ?? 0;
+    }
+
+    if (!$id) {
+        send_json(['error' => 'Blog ID required.'], 400);
+    }
+
+    delete_blog_post($id);
+    send_json(['success' => true, 'message' => 'Blog post deleted successfully.']);
+}
+
+if ($path === '/api/blog/get' && $request_method === 'GET') {
+    adminRequired();
+    $id = $_GET['id'] ?? 0;
+    $blog = get_blog_by_id($id);
+    if (!$blog) {
+        send_json(['error' => 'Blog post not found.'], 404);
+    }
+    send_json(['success' => true, 'blog' => $blog]);
+}
+
+if ($path === '/api/blog/list' && $request_method === 'GET') {
+    adminRequired();
+    $blogs = get_all_blogs();
+    send_json(['success' => true, 'blogs' => $blogs]);
+}
+
+if ($path === '/api/blog/upload-image' && $request_method === 'POST') {
+    adminRequired();
+    $file = $_FILES['image'] ?? null;
+    if (!$file) {
+        send_json(['error' => 'No image file uploaded.'], 400);
+    }
+
+    try {
+        $url = handle_blog_image_upload($file);
+        send_json([
+            'success' => true,
+            'url' => $url,
+            'name' => basename($url),
+            'message' => 'Image uploaded successfully.'
+        ]);
+    } catch (Exception $e) {
+        send_json(['error' => $e->getMessage()], 400);
+    }
+}
+
+if ($path === '/api/blog/preview' && $request_method === 'POST') {
+    adminRequired();
+    $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+    if (strpos($contentType, 'application/json') !== false) {
+        $data = json_decode(file_get_contents('php://input'), true) ?: [];
+    } else {
+        $data = $_POST;
+    }
+
+    $content = $data['content'] ?? '';
+    $images = $data['images_json'] ?? [];
+    $html = parseBlogPlaceholders($content, $images);
+    send_json(['success' => true, 'html' => $html]);
+}
+
 if (preg_match('#^/dashboard/orders/(\d+)/delete$#', $path, $m) && $request_method === 'POST') {
     adminRequired();
     $order_id = $m[1];
@@ -367,6 +460,16 @@ if ($path === '/dashboard.php' && ($_GET['action'] ?? '') === 'delete_enquiry') 
         delete_row('enquiries', $enquiry_id);
     }
     header('Location: dashboard.php');
+    exit;
+}
+
+if ($path === '/dashboard.php' && ($_GET['action'] ?? '') === 'delete_blog') {
+    $blog_id = $_GET['id'] ?? 0;
+    if ($blog_id) {
+        adminRequired();
+        delete_blog_post($blog_id);
+    }
+    header('Location: dashboard.php#blogs');
     exit;
 }
 
@@ -487,7 +590,17 @@ $static_routes = [
     '/sitemap.xml' => 'sitemap.xml',
     '/dashboard.html' => 'dashboard.php',
     '/dashboard.php' => 'dashboard.php',
+    '/blog' => 'blog.php',
+    '/blog.html' => 'blog.php',
+    '/blog.php' => 'blog.php',
+    '/blog-post.php' => 'blog-post.php',
 ];
+
+if (preg_match('#^/blog/([a-zA-Z0-9-]+)$#', $path, $m)) {
+    $_GET['slug'] = $m[1];
+    include 'blog-post.php';
+    exit;
+}
 
 if (isset($static_routes[$path])) {
     $file = $static_routes[$path];
@@ -505,6 +618,7 @@ if (isset($static_routes[$path])) {
             'png' => 'image/png',
             'jpg' => 'image/jpeg',
             'jpeg' => 'image/jpeg',
+            'webp' => 'image/webp',
             'gif' => 'image/gif',
             'svg' => 'image/svg+xml',
             'pdf' => 'application/pdf',
