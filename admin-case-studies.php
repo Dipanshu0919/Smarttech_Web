@@ -640,7 +640,7 @@ $case_study_count = count($case_studies);
         .preview-content-box .blog-callout { display: flex; gap: 0.8rem; background: #eef8ee; border: 1px solid rgba(34, 139, 34, 0.2); border-radius: 14px; padding: 1rem 1.2rem; margin: 1.2rem 0; }
         .preview-content-box .blog-tip-box { display: flex; gap: 0.8rem; background: #fffbe8; border: 1px solid rgba(220, 180, 0, 0.35); border-radius: 14px; padding: 1rem 1.2rem; margin: 1.2rem 0; color: #634f00; }
         .preview-content-box .blog-figure { margin: 1.5rem 0; text-align: center; }
-        .preview-content-box .blog-responsive-img { max-width: 100%; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+        .preview-content-box .blog-responsive-img { max-width: 100%; max-height: 400px; width: auto; height: auto; object-fit: contain; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); display: inline-block; }
         .preview-content-box .blog-fig-caption { font-size: 0.85rem; color: var(--text-soft); font-style: italic; margin-top: 0.4rem; }
         .preview-content-box .blog-action-btn { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--green-main); color: #ffffff; padding: 0.65rem 1.4rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.95rem; }
         .preview-content-box .blog-inline-link { color: var(--green-main); font-weight: 700; text-decoration: underline; }
@@ -874,7 +874,10 @@ $case_study_count = count($case_studies);
                             </div>
                             <div class="form-group" style="flex:1;">
                                 <label for="csFeaturedImg">Featured Image URL (Banner)</label>
-                                <input type="url" id="csFeaturedImg" class="form-input" placeholder="https://... (or leave blank to use attached image)" oninput="updateLiveCSPreview()">
+                                <div style="display:flex; gap:0.4rem;">
+                                    <input type="url" id="csFeaturedImg" class="form-input" placeholder="https://... (or leave blank to use attached image)" oninput="updateLiveCSPreview()">
+                                    <button type="button" class="btn-action" style="padding:0.4rem 0.8rem; font-size:0.8rem; white-space:nowrap;" onclick="document.getElementById('csFeaturedImg').value=''; updateLiveCSPreview();" title="Clear Featured Banner">Clear</button>
+                                </div>
                             </div>
                         </div>
 
@@ -1182,10 +1185,6 @@ $case_study_count = count($case_studies);
                         const key = 'image_' + nextIndex;
                         attachedCSImages[key] = imgUrl;
 
-                        if (!document.getElementById('csFeaturedImg').value) {
-                            document.getElementById('csFeaturedImg').value = imgUrl;
-                        }
-
                         renderAttachedCSImages();
                         updateLiveCSPreview();
                     } else {
@@ -1203,6 +1202,15 @@ $case_study_count = count($case_studies);
                     }
                 });
             });
+        }
+
+        // Set an uploaded image as the Case Study Featured Banner
+        function setAsCSFeaturedBanner(url) {
+            const input = document.getElementById('csFeaturedImg');
+            if (input) {
+                input.value = url;
+                updateLiveCSPreview();
+            }
         }
 
         // Drag & Drop listeners for Case Study dropzone
@@ -1258,6 +1266,9 @@ $case_study_count = count($case_studies);
                     <div class="image-actions-row">
                         <button type="button" class="image-action-btn btn-insert-tag" onclick="insertRawCSPlaceholder('{{ ${key} }}\\n\\n')" title="Insert {{ ${key} }} into case study">
                             Insert Tag
+                        </button>
+                        <button type="button" class="image-action-btn" style="background:rgba(34,139,34,0.1); color:var(--green-dark);" onclick="setAsCSFeaturedBanner('${url}')" title="Set as Featured Banner">
+                            Banner
                         </button>
                         <button type="button" class="image-action-btn btn-del-img" onclick="removeAttachedCSImage('${key}')" title="Remove image">
                             &times;
@@ -1457,13 +1468,19 @@ $case_study_count = count($case_studies);
 
             if (featuredImg) {
                 headerHtml += `
-                    <div style="margin-bottom:1.5rem; border-radius:12px; overflow:hidden; max-height:280px;">
-                        <img src="${escapeHtml(featuredImg)}" style="width:100%; height:100%; object-fit:cover; display:block;" alt="Featured banner">
+                    <div style="margin-bottom:1.5rem; border-radius:12px; overflow:hidden; max-height:260px; background:#f4f8f4; text-align:center;">
+                        <img src="${escapeHtml(featuredImg)}" style="max-width:100%; max-height:260px; width:auto; height:auto; object-fit:contain; display:inline-block;" alt="Featured banner">
                     </div>
                 `;
             }
 
-            const parsedBody = parseCSPlaceholdersJS(content, attachedCSImages);
+            let cleanContent = content;
+            if (title) {
+                cleanContent = cleanContent.replace(/^\s*\{\{\s*title\s*\}\}[\s\S]*?\{\{\s*\/title\s*\}\}\s*/i, '');
+                cleanContent = cleanContent.replace(/^\s*\{\{\s*title\s*:[^}\n]+\}\}\s*/i, '');
+            }
+
+            const parsedBody = parseCSPlaceholdersJS(cleanContent, attachedCSImages);
             container.innerHTML = headerHtml + (parsedBody || '<p style="color:var(--text-soft); font-style:italic;">[Case study content will appear here]</p>');
         }
 

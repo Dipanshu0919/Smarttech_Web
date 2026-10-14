@@ -388,7 +388,7 @@ $blogs = get_all_blogs(true); // Fetch published blogs
         }
 
         .blog-card-footer {
-            margin-top: 0.5rem;
+            margin-top: auto;
             padding-top: 1rem;
             border-top: 1px solid rgba(34, 139, 34, 0.08);
             display: flex;
@@ -541,9 +541,11 @@ $blogs = get_all_blogs(true); // Fetch published blogs
                                 <h2 class="blog-card-title">
                                     <a href="<?= $postUrl ?>"><?= htmlspecialchars($post['title']) ?></a>
                                 </h2>
-                                <p class="blog-card-desc">
-                                    <?= htmlspecialchars($post['meta_description'] ?: substr(strip_tags($post['content']), 0, 160) . '...') ?>
-                                </p>
+                                <?php if (!empty($post['meta_description'])): ?>
+                                    <p class="blog-card-desc">
+                                        <?= htmlspecialchars(trim($post['meta_description'])) ?>
+                                    </p>
+                                <?php endif; ?>
                                 <?php if (!empty($post['keywords'])): 
                                     $cardKws = array_slice(array_filter(array_map('trim', explode(',', $post['keywords']))), 0, 3);
                                 ?>

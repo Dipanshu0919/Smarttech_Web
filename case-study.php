@@ -635,9 +635,11 @@ $case_studies = get_all_case_studies(true); // Fetch published case studies
                                 <h2 class="cs-card-title">
                                     <a href="<?= $csUrl ?>"><?= htmlspecialchars($cs['title']) ?></a>
                                 </h2>
-                                <p class="cs-card-desc">
-                                    <?= htmlspecialchars($cs['meta_description'] ?: substr(strip_tags($cs['content']), 0, 160) . '...') ?>
-                                </p>
+                                <?php if (!empty($cs['meta_description'])): ?>
+                                    <p class="cs-card-desc">
+                                        <?= htmlspecialchars(trim($cs['meta_description'])) ?>
+                                    </p>
+                                <?php endif; ?>
                                 <?php if (!empty($cs['keywords'])): 
                                     $cardKws = array_slice(array_filter(array_map('trim', explode(',', $cs['keywords']))), 0, 3);
                                 ?>

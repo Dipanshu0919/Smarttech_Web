@@ -169,6 +169,44 @@ function parseBlogPlaceholders($content, $imagesMap = []) {
 }
 
 /**
+ * Strips formatting placeholders and HTML to return clean excerpt text for cards and meta descriptions.
+ */
+function cleanContentExcerpt($content, $metaDescription = '', $maxLength = 160) {
+    if (!empty($metaDescription)) {
+        return trim($metaDescription);
+    }
+    if (empty($content)) {
+        return '';
+    }
+
+    $text = $content;
+    // 1. Remove image placeholders, links, dividers completely
+    $text = preg_replace('/\{\{\s*(?:image_\d+|image_link|image|divider)[^}]*\}\}/i', ' ', $text);
+
+    // 2. Extract inner text for stat, callout, button, link
+    $text = preg_replace_callback('/\{\{\s*(?:stat|callout|button|link)\s*:\s*([^|{}]+)(?:\|\s*([^}]+))?\}\}/i', function($m) {
+        $p1 = trim($m[1] ?? '');
+        $p2 = trim($m[2] ?? '');
+        return ($p1 ? $p1 . '. ' : '') . ($p2 ? $p2 . ' ' : ' ');
+    }, $text);
+
+    // 3. Strip all opening/closing placeholder tags e.g. {{ bold }}, {{ /bold }}, {{ title }}, {{ challenge }}, {{ /challenge }}, etc.
+    $text = preg_replace('/\{\{[^}]+\}\}/', ' ', $text);
+
+    // 4. Strip any stray HTML tags
+    $text = strip_tags($text);
+
+    // 5. Normalize whitespace
+    $text = preg_replace('/\s+/', ' ', $text);
+    $text = trim($text);
+
+    if (mb_strlen($text) <= $maxLength) {
+        return $text;
+    }
+    return mb_substr($text, 0, $maxLength) . '...';
+}
+
+/**
  * Generates an SEO-friendly slug from a title string.
  */
 function createBlogSlug($title, $id = null) {

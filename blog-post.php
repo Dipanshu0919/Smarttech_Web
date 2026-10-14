@@ -40,7 +40,7 @@ $shareUrl = $post ? 'https://smartechsolutions.in/blog/' . htmlspecialchars($pos
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $post ? htmlspecialchars($post['title']) . ' | SmarTech Solutions' : 'Article Not Found | SmarTech Solutions' ?></title>
-    <meta name="description" content="<?= $post ? htmlspecialchars($post['meta_description'] ?: substr(strip_tags($post['content']), 0, 160)) : 'Article on SmarTech Solutions' ?>">
+    <meta name="description" content="<?= $post ? htmlspecialchars(cleanContentExcerpt($post['content'], $post['meta_description'] ?? '', 160)) : 'Article on SmarTech Solutions' ?>">
     <?php if ($post && !empty($post['keywords'])): ?>
     <meta name="keywords" content="<?= htmlspecialchars($post['keywords']) ?>">
     <?php endif; ?>
@@ -53,7 +53,7 @@ $shareUrl = $post ? 'https://smartechsolutions.in/blog/' . htmlspecialchars($pos
     <meta property="og:type" content="article">
     <meta property="og:url" content="<?= $shareUrl ?>">
     <meta property="og:title" content="<?= $post ? htmlspecialchars($post['title']) : 'Blog Article' ?>">
-    <meta property="og:description" content="<?= $post ? htmlspecialchars($post['meta_description'] ?: substr(strip_tags($post['content']), 0, 160)) : '' ?>">
+    <meta property="og:description" content="<?= $post ? htmlspecialchars(cleanContentExcerpt($post['content'], $post['meta_description'] ?? '', 160)) : '' ?>">
     <meta property="og:image" content="<?= $post && !empty($post['featured_image']) ? htmlspecialchars($post['featured_image']) : 'https://smartechsolutions.in/assets/smarttechlogo.png' ?>">
     <meta property="og:site_name" content="SmarTech Solutions">
 
@@ -61,7 +61,7 @@ $shareUrl = $post ? 'https://smartechsolutions.in/blog/' . htmlspecialchars($pos
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="<?= $shareUrl ?>">
     <meta name="twitter:title" content="<?= $post ? htmlspecialchars($post['title']) : 'Blog Article' ?>">
-    <meta name="twitter:description" content="<?= $post ? htmlspecialchars($post['meta_description'] ?: substr(strip_tags($post['content']), 0, 160)) : '' ?>">
+    <meta name="twitter:description" content="<?= $post ? htmlspecialchars(cleanContentExcerpt($post['content'], $post['meta_description'] ?? '', 160)) : '' ?>">
     <meta name="twitter:image" content="<?= $post && !empty($post['featured_image']) ? htmlspecialchars($post['featured_image']) : 'https://smartechsolutions.in/assets/smarttechlogo.png' ?>">
 
     <?php if ($post): ?>
@@ -71,7 +71,7 @@ $shareUrl = $post ? 'https://smartechsolutions.in/blog/' . htmlspecialchars($pos
         "@context": "https://schema.org",
         "@type": "BlogPosting",
         "headline": "<?= addslashes($post['title']) ?>",
-        "description": "<?= addslashes($post['meta_description'] ?: '') ?>",
+        "description": "<?= addslashes(cleanContentExcerpt($post['content'], $post['meta_description'] ?? '', 160)) ?>",
         <?php if (!empty($post['keywords'])): ?>
         "keywords": "<?= addslashes($post['keywords']) ?>",
         <?php endif; ?>
@@ -826,7 +826,9 @@ $shareUrl = $post ? 'https://smartechsolutions.in/blog/' . htmlspecialchars($pos
                                 <a href="/blog/<?= htmlspecialchars($rec['slug']) ?>" class="related-card">
                                     <span class="category-pill" style="font-size:0.75rem; padding:0.25rem 0.6rem;"><?= htmlspecialchars($rec['category'] ?? 'General') ?></span>
                                     <h3><?= htmlspecialchars($rec['title']) ?></h3>
-                                    <p><?= htmlspecialchars($rec['meta_description'] ?: substr(strip_tags($rec['content']), 0, 110) . '...') ?></p>
+                                    <?php if (!empty($rec['meta_description'])): ?>
+                                        <p><?= htmlspecialchars(trim($rec['meta_description'])) ?></p>
+                                    <?php endif; ?>
                                 </a>
                             <?php endforeach; ?>
                         </div>

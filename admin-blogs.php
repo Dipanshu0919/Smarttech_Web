@@ -640,7 +640,7 @@ $blog_count = count($blogs);
         .preview-content-box .blog-callout { display: flex; gap: 0.8rem; background: #eef8ee; border: 1px solid rgba(34, 139, 34, 0.2); border-radius: 14px; padding: 1rem 1.2rem; margin: 1.2rem 0; }
         .preview-content-box .blog-tip-box { display: flex; gap: 0.8rem; background: #fffbe8; border: 1px solid rgba(220, 180, 0, 0.35); border-radius: 14px; padding: 1rem 1.2rem; margin: 1.2rem 0; color: #634f00; }
         .preview-content-box .blog-figure { margin: 1.5rem 0; text-align: center; }
-        .preview-content-box .blog-responsive-img { max-width: 100%; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+        .preview-content-box .blog-responsive-img { max-width: 100%; max-height: 400px; width: auto; height: auto; object-fit: contain; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); display: inline-block; }
         .preview-content-box .blog-fig-caption { font-size: 0.85rem; color: var(--text-soft); font-style: italic; margin-top: 0.4rem; }
         .preview-content-box .blog-action-btn { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--green-main); color: #ffffff; padding: 0.65rem 1.4rem; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.95rem; }
         .preview-content-box .blog-inline-link { color: var(--green-main); font-weight: 700; text-decoration: underline; }
@@ -852,7 +852,10 @@ $blog_count = count($blogs);
                             </div>
                             <div class="form-group" style="flex:1;">
                                 <label for="postFeaturedImg">Featured Image URL (Banner)</label>
-                                <input type="url" id="postFeaturedImg" class="form-input" placeholder="https://... (or leave blank to use attached image)" oninput="updateLivePreview()">
+                                <div style="display:flex; gap:0.4rem;">
+                                    <input type="url" id="postFeaturedImg" class="form-input" placeholder="https://... (or leave blank to use attached image)" oninput="updateLivePreview()">
+                                    <button type="button" class="btn-action" style="padding:0.4rem 0.8rem; font-size:0.8rem; white-space:nowrap;" onclick="document.getElementById('postFeaturedImg').value=''; updateLivePreview();" title="Clear Featured Banner">Clear</button>
+                                </div>
                             </div>
                         </div>
 
@@ -1149,10 +1152,6 @@ $blog_count = count($blogs);
                         const key = 'image_' + nextIndex;
                         attachedImages[key] = imgUrl;
 
-                        if (!document.getElementById('postFeaturedImg').value) {
-                            document.getElementById('postFeaturedImg').value = imgUrl;
-                        }
-
                         renderAttachedImages();
                         updateLivePreview();
                     } else {
@@ -1170,6 +1169,15 @@ $blog_count = count($blogs);
                     }
                 });
             });
+        }
+
+        // Set an uploaded image as the Featured Banner
+        function setAsFeaturedBanner(url) {
+            const input = document.getElementById('postFeaturedImg');
+            if (input) {
+                input.value = url;
+                updateLivePreview();
+            }
         }
 
         // Drag & Drop listeners
@@ -1227,6 +1235,9 @@ $blog_count = count($blogs);
                         <button type="button" class="image-action-btn btn-insert-tag" onclick="insertRawPlaceholder('{{ ${key} }}\\n\\n')" title="Insert {{ ${key} }} into post">
                             Insert Tag
                         </button>
+                        <button type="button" class="image-action-btn" style="background:rgba(34,139,34,0.1); color:var(--green-dark);" onclick="setAsFeaturedBanner('${url}')" title="Set as Featured Banner">
+                            Banner
+                        </button>
                         <button type="button" class="image-action-btn btn-del-img" onclick="removeAttachedImage('${key}')" title="Remove image">
                             &times;
                         </button>
@@ -1262,7 +1273,7 @@ $blog_count = count($blogs);
             text = text.replace(/\{\{\s*divider\s*\}\}/gi, '<hr class="blog-divider">');
 
             // Title & Headings
-            text = text.replace(/\{\{\s*title\s*\}\}([\s\S]*?)\\{\{\s*\/title\s*\}\}/gi, '<h1 class="blog-display-title">$1</h1>');
+            text = text.replace(/\{\{\s*title\s*\}\}([\s\S]*?)\{\{\s*\/title\s*\}\}/gi, '<h1 class="blog-display-title">$1</h1>');
             text = text.replace(/\{\{\s*title\s*:\s*([^}\n]+)\s*\}\}/gi, '<h1 class="blog-display-title">$1</h1>');
 
             for (let i = 1; i <= 6; i++) {
@@ -1273,16 +1284,16 @@ $blog_count = count($blogs);
             }
 
             // Formatting
-            text = text.replace(/\{\{\s*(?:bold|b)\s*\}\}([\s\S]*?)\\{\{\s*\/(?:bold|b)\s*\}\}/gi, '<strong class="blog-strong">$1</strong>');
-            text = text.replace(/\{\{\s*(?:italic|i)\s*\}\}([\s\S]*?)\\{\{\s*\/(?:italic|i)\s*\}\}/gi, '<em class="blog-em">$1</em>');
-            text = text.replace(/\{\{\s*(?:underline|u)\s*\}\}([\s\S]*?)\\{\{\s*\/(?:underline|u)\s*\}\}/gi, '<u class="blog-underline">$1</u>');
-            text = text.replace(/\{\{\s*highlight\s*\}\}([\s\S]*?)\\{\{\s*\/highlight\s*\}\}/gi, '<mark class="blog-mark">$1</mark>');
+            text = text.replace(/\{\{\s*(?:bold|b)\s*\}\}([\s\S]*?)\{\{\s*\/(?:bold|b)\s*\}\}/gi, '<strong class="blog-strong">$1</strong>');
+            text = text.replace(/\{\{\s*(?:italic|i)\s*\}\}([\s\S]*?)\{\{\s*\/(?:italic|i)\s*\}\}/gi, '<em class="blog-em">$1</em>');
+            text = text.replace(/\{\{\s*(?:underline|u)\s*\}\}([\s\S]*?)\{\{\s*\/(?:underline|u)\s*\}\}/gi, '<u class="blog-underline">$1</u>');
+            text = text.replace(/\{\{\s*highlight\s*\}\}([\s\S]*?)\{\{\s*\/highlight\s*\}\}/gi, '<mark class="blog-mark">$1</mark>');
 
             // Quotes & Code
-            text = text.replace(/\{\{\s*quote\s*\}\}([\s\S]*?)\\{\{\s*\/quote\s*\}\}/gi, (m, p1) => {
+            text = text.replace(/\{\{\s*quote\s*\}\}([\s\S]*?)\{\{\s*\/quote\s*\}\}/gi, (m, p1) => {
                 return `<blockquote class="blog-quote">${p1.trim()}</blockquote>`;
             });
-            text = text.replace(/\{\{\s*code\s*\}\}([\s\S]*?)\\{\{\s*\/code\s*\}\}/gi, (m, p1) => {
+            text = text.replace(/\{\{\s*code\s*\}\}([\s\S]*?)\{\{\s*\/code\s*\}\}/gi, (m, p1) => {
                 return `<pre class="blog-code-block"><code>${escapeHtml(p1)}</code></pre>`;
             });
 
@@ -1290,10 +1301,10 @@ $blog_count = count($blogs);
             text = text.replace(/\{\{\s*callout\s*:\s*([^|{}]+)(?:\|\s*([^}]+))?\}\}/gi, (m, title, body) => {
                 return `<aside class="blog-callout"><div><strong>${escapeHtml(title.trim())}</strong><p style="margin:4px 0 0;">${(body || '').trim()}</p></div></aside>`;
             });
-            text = text.replace(/\{\{\s*callout\s*\}\}([\s\S]*?)\\{\{\s*\/callout\s*\}\}/gi, (m, p1) => {
+            text = text.replace(/\{\{\s*callout\s*\}\}([\s\S]*?)\{\{\s*\/callout\s*\}\}/gi, (m, p1) => {
                 return `<aside class="blog-callout"><div>${p1.trim()}</div></aside>`;
             });
-            text = text.replace(/\{\{\s*tip\s*\}\}([\s\S]*?)\\{\{\s*\/tip\s*\}\}/gi, (m, p1) => {
+            text = text.replace(/\{\{\s*tip\s*\}\}([\s\S]*?)\{\{\s*\/tip\s*\}\}/gi, (m, p1) => {
                 return `<div class="blog-tip-box"><div>${p1.trim()}</div></div>`;
             });
 
@@ -1335,9 +1346,9 @@ $blog_count = count($blogs);
             });
 
             // Bullets
-            text = text.replace(/(?:\{\{\s*(?:bullet|li)\s*\}\}([\s\S]*?)\\{\{\s*\/(?:bullet|li)\s*\}\}\s*)+/gi, (match) => {
+            text = text.replace(/(?:\{\{\s*(?:bullet|li)\s*\}\}([\s\S]*?)\{\{\s*\/(?:bullet|li)\s*\}\}\s*)+/gi, (match) => {
                 let itemsHtml = '';
-                const itemRegex = /\{\{\s*(?:bullet|li)\s*\}\}([\s\S]*?)\\{\{\s*\/(?:bullet|li)\s*\}\}/gi;
+                const itemRegex = /\{\{\s*(?:bullet|li)\s*\}\}([\s\S]*?)\{\{\s*\/(?:bullet|li)\s*\}\}/gi;
                 let itemMatch;
                 while ((itemMatch = itemRegex.exec(match)) !== null) {
                     itemsHtml += `<li>${itemMatch[1].trim()}</li>`;
@@ -1346,9 +1357,9 @@ $blog_count = count($blogs);
             });
 
             // Numbers
-            text = text.replace(/(?:\{\{\s*number\s*\}\}([\s\S]*?)\\{\{\s*\/number\s*\}\}\s*)+/gi, (match) => {
+            text = text.replace(/(?:\{\{\s*number\s*\}\}([\s\S]*?)\{\{\s*\/number\s*\}\}\s*)+/gi, (match) => {
                 let itemsHtml = '';
-                const itemRegex = /\{\{\s*number\s*\}\}([\s\S]*?)\\{\{\s*\/number\s*\}\}/gi;
+                const itemRegex = /\{\{\s*number\s*\}\}([\s\S]*?)\{\{\s*\/number\s*\}\}/gi;
                 let itemMatch;
                 while ((itemMatch = itemRegex.exec(match)) !== null) {
                     itemsHtml += `<li>${itemMatch[1].trim()}</li>`;
@@ -1398,13 +1409,20 @@ $blog_count = count($blogs);
 
             if (featuredImg) {
                 headerHtml += `
-                    <div style="margin-bottom:1.5rem; border-radius:12px; overflow:hidden; max-height:280px;">
-                        <img src="${escapeHtml(featuredImg)}" style="width:100%; height:100%; object-fit:cover; display:block;" alt="Featured banner">
+                    <div style="margin-bottom:1.5rem; border-radius:12px; overflow:hidden; max-height:260px; background:#f4f8f4; text-align:center;">
+                        <img src="${escapeHtml(featuredImg)}" style="max-width:100%; max-height:260px; width:auto; height:auto; object-fit:contain; display:inline-block;" alt="Featured banner">
                     </div>
                 `;
             }
 
-            const parsedBody = parsePlaceholdersJS(content, attachedImages);
+            // Strip redundant leading title from body content if top title is already provided
+            let cleanContent = content;
+            if (title) {
+                cleanContent = cleanContent.replace(/^\s*\{\{\s*title\s*\}\}[\s\S]*?\{\{\s*\/title\s*\}\}\s*/i, '');
+                cleanContent = cleanContent.replace(/^\s*\{\{\s*title\s*:[^}\n]+\}\}\s*/i, '');
+            }
+
+            const parsedBody = parsePlaceholdersJS(cleanContent, attachedImages);
             container.innerHTML = headerHtml + (parsedBody || '<p style="color:var(--text-soft); font-style:italic;">[Blog post body will appear here]</p>');
         }
 
