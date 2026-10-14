@@ -125,12 +125,6 @@ function send_json($data, $status = 200) {
     exit;
 }
 
-// If index.php is included by another script (e.g. dashboard.php, admin-blogs.php),
-// only export helper functions and do not run the front-controller router.
-if (!empty(debug_backtrace())) {
-    return;
-}
-
 $request_uri = $_SERVER['REQUEST_URI'] ?? '/';
 $request_method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $path = $_GET['path'] ?? parse_url($request_uri, PHP_URL_PATH);
@@ -741,6 +735,9 @@ if (isset($static_routes[$path])) {
     $file = $static_routes[$path];
     if (file_exists($file)) {
         if (pathinfo($file, PATHINFO_EXTENSION) === 'php') {
+            if (!empty($_SERVER['SCRIPT_FILENAME']) && realpath($file) === realpath($_SERVER['SCRIPT_FILENAME'])) {
+                return;
+            }
             include $file;
             exit;
         }
