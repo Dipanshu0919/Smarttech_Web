@@ -700,6 +700,21 @@ $admin_management_link_visible = isset($_SESSION['superadmin_access']) && $_SESS
         .preview-content-box .blog-divider { border: 0; height: 1px; background: rgba(34, 139, 34, 0.2); margin: 2rem 0; }
         .preview-content-box .blog-img-missing { background: #fff3cd; color: #856404; padding: 0.8rem 1rem; border-radius: 8px; border: 1px dashed #ffeeba; font-size: 0.9rem; text-align: center; margin: 1rem 0; }
 
+        /* Case Study Preview Specific Typography */
+        .preview-content-box .cs-stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+        .preview-content-box .cs-stat-card { background: linear-gradient(135deg, #f4faf6 0%, #e7f5ec 100%); border: 1px solid rgba(24, 121, 48, 0.2); border-radius: 14px; padding: 1rem 1.2rem; text-align: center; }
+        .preview-content-box .cs-stat-value { font-size: 1.8rem; font-weight: 800; color: #0a2515; line-height: 1.1; margin-bottom: 0.3rem; }
+        .preview-content-box .cs-stat-label { font-size: 0.8rem; font-weight: 700; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.04em; }
+        .preview-content-box .cs-phase-box { border-radius: 16px; padding: 1.2rem 1.5rem; margin: 1.5rem 0; border: 1px solid transparent; }
+        .preview-content-box .cs-phase-challenge { background: #fdf5f5; border-color: rgba(220, 38, 38, 0.2); }
+        .preview-content-box .cs-phase-challenge .cs-phase-header { color: #b91c1c; }
+        .preview-content-box .cs-phase-solution { background: #f0fdf4; border-color: rgba(22, 163, 74, 0.25); }
+        .preview-content-box .cs-phase-solution .cs-phase-header { color: #15803d; }
+        .preview-content-box .cs-phase-results { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border-color: rgba(5, 150, 105, 0.3); }
+        .preview-content-box .cs-phase-results .cs-phase-header { color: #047857; }
+        .preview-content-box .cs-phase-header { display: flex; align-items: center; gap: 0.5rem; font-size: 1rem; font-weight: 800; margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.04em; }
+        .preview-content-box .cs-phase-body { font-size: 0.95rem; line-height: 1.65; color: var(--text-dark); }
+
         .editor-footer-bar {
             display: flex;
             align-items: center;
@@ -1291,82 +1306,132 @@ $admin_management_link_visible = isset($_SESSION['superadmin_access']) && $_SESS
                                 </div>
                             </div>
 
-                            <!-- Image Upload Section -->
+                            <!-- 1. Top Image Upload Section with Auto-Generated Placeholders -->
                             <div class="upload-section-box">
                                 <div class="upload-section-header">
                                     <h3>
                                         <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
                                         Upload Case Study Images (Auto-Generates Placeholders: {{ image_1 }}, {{ image_2 }}...)
                                     </h3>
+                                    <span style="font-size:0.84rem; color:var(--text-soft);">Upload multiple images at the top; place them anywhere in the case study using their tags.</span>
                                 </div>
-                                <p style="margin:0 0 0.8rem; color:var(--text-soft); font-size:0.88rem;">
-                                    Upload screenshots, architecture diagrams, or client photos. They will be auto-assigned image placeholders for insertion into the content.
-                                </p>
-                                <div class="drop-zone" id="csDropZone">
-                                    <input type="file" id="csImageFileInput" accept="image/*" style="display:none;" onchange="handleCSImageFiles(this.files)">
-                                    <svg viewBox="0 0 24 24" width="36" height="36" fill="var(--green-main)" style="margin-bottom:0.4rem;"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
-                                    <div style="font-weight:700; color:var(--green-dark);">Click to choose image or drag &amp; drop here</div>
-                                    <div style="font-size:0.8rem; color:var(--text-soft);">Supports JPG, PNG, WEBP, SVG</div>
+
+                                <!-- Dropzone -->
+                                <div class="upload-dropzone" id="csImageDropzone" onclick="document.getElementById('csMultiImageInput').click()">
+                                    <input type="file" id="csMultiImageInput" style="display:none;" multiple accept="image/*" onchange="handleCSMultipleImageUpload(this.files)">
+                                    <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                                    <p>Click or drag &amp; drop images here to upload</p>
+                                    <span>Supports JPG, PNG, WebP, SVG. Automatically generates {{ image_1 }}, {{ image_2 }}, etc.</span>
                                 </div>
-                                <div class="attached-images-strip" id="csAttachedImagesStrip"></div>
+
+                                <!-- Attached Images Gallery -->
+                                <div class="images-grid" id="csUploadedImagesGrid"></div>
+
+                                <!-- Online External Image Link Option -->
+                                <div class="external-img-box">
+                                    <strong style="color:var(--green-dark); font-size:0.88rem; display:flex; align-items:center; gap:0.3rem;">
+                                        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+                                        Insert Online Image Link:
+                                    </strong>
+                                    <input type="url" id="csOnlineImgUrl" class="form-input" style="flex:2; min-width:200px;" placeholder="https://example.com/photo.jpg">
+                                    <input type="text" id="csOnlineImgCaption" class="form-input" style="flex:1; min-width:160px;" placeholder="Optional caption...">
+                                    <button type="button" class="btn-action btn-primary" onclick="insertCSOnlineImagePlaceholder()" style="padding:0.6rem 1rem;">
+                                        Insert {{ image_link }}
+                                    </button>
+                                </div>
                             </div>
 
-                            <!-- Tabs: Editor vs Live Preview -->
-                            <div class="tab-header">
-                                <button type="button" class="tab-btn active" id="csTabEditorBtn" onclick="switchCSTab('editor')">
-                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-                                    Case Study Content
-                                </button>
-                                <button type="button" class="tab-btn" id="csTabPreviewBtn" onclick="switchCSTab('preview')">
-                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                                    Live Preview
-                                </button>
+                            <!-- 2. Tap to Paste Placeholders Palette Toolbar -->
+                            <div class="palette-box">
+                                <div class="palette-title-row">
+                                    <strong>
+                                        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 2h-4.18C14.4 .84 13.3 0 12 0c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm7 18H5V4h2v3h10V4h2v16z"/></svg>
+                                        Tap to Paste Placeholders
+                                    </strong>
+                                    <span style="font-size:0.82rem; color:var(--text-soft);">Tap any button to insert at cursor or wrap selected text in the content editor.</span>
+                                </div>
+
+                                <div class="palette-groups">
+                                    <!-- Case Study Specific -->
+                                    <div class="palette-group">
+                                        <span class="group-label">Case Study:</span>
+                                        <button type="button" class="placeholder-pill" style="background:#e8f5e9; font-weight:800; color:var(--green-dark);" onclick="insertRawCSPlaceholder('{{ stat: 95% | Impact metric achieved }}\n\n')">+ {{ stat }}</button>
+                                        <button type="button" class="placeholder-pill" style="background:#fef2f2; font-weight:800; color:#b91c1c;" onclick="wrapCSPlaceholder('challenge', 'Describe the institutional or business bottleneck...')">+ {{ challenge }}</button>
+                                        <button type="button" class="placeholder-pill" style="background:#f0fdf4; font-weight:800; color:#15803d;" onclick="wrapCSPlaceholder('solution', 'Describe the SmarTech architecture and implementation...')">+ {{ solution }}</button>
+                                        <button type="button" class="placeholder-pill" style="background:#ecfdf5; font-weight:800; color:#047857;" onclick="wrapCSPlaceholder('results', 'Detail measurable ROI, efficiency gains, and outcomes...')">+ {{ results }}</button>
+                                    </div>
+
+                                    <!-- Headings -->
+                                    <div class="palette-group">
+                                        <span class="group-label">Headings:</span>
+                                        <button type="button" class="placeholder-pill" onclick="wrapCSPlaceholder('title', 'Case Study Main Title')">+ {{ title }}</button>
+                                        <button type="button" class="placeholder-pill" onclick="wrapCSPlaceholder('h1', 'Heading 1')">+ {{ h1 }}</button>
+                                        <button type="button" class="placeholder-pill" onclick="wrapCSPlaceholder('h2', 'Heading 2')">+ {{ h2 }}</button>
+                                        <button type="button" class="placeholder-pill" onclick="wrapCSPlaceholder('h3', 'Heading 3')">+ {{ h3 }}</button>
+                                        <button type="button" class="placeholder-pill" onclick="wrapCSPlaceholder('h4', 'Heading 4')">+ {{ h4 }}</button>
+                                    </div>
+
+                                    <!-- Text styles -->
+                                    <div class="palette-group">
+                                        <span class="group-label">Formatting:</span>
+                                        <button type="button" class="placeholder-pill" onclick="wrapCSPlaceholder('bold', 'Bold text')">+ {{ bold }}</button>
+                                        <button type="button" class="placeholder-pill" onclick="wrapCSPlaceholder('italic', 'Italic text')">+ {{ italic }}</button>
+                                        <button type="button" class="placeholder-pill" onclick="wrapCSPlaceholder('underline', 'Underlined text')">+ {{ underline }}</button>
+                                        <button type="button" class="placeholder-pill" onclick="wrapCSPlaceholder('highlight', 'Highlighted text')">+ {{ highlight }}</button>
+                                    </div>
+
+                                    <!-- Blocks & Quotes -->
+                                    <div class="palette-group">
+                                        <span class="group-label">Blocks:</span>
+                                        <button type="button" class="placeholder-pill" onclick="wrapCSPlaceholder('bullet', 'Key milestone or deliverable')">+ {{ bullet }}</button>
+                                        <button type="button" class="placeholder-pill" onclick="wrapCSPlaceholder('number', 'Step 1: Implementation phase')">+ {{ number }}</button>
+                                        <button type="button" class="placeholder-pill" onclick="wrapCSPlaceholder('quote', 'Client testimonial or outcome quote.')">+ {{ quote }}</button>
+                                        <button type="button" class="placeholder-pill" onclick="wrapCSPlaceholder('code', 'SELECT * FROM metrics;')">+ {{ code }}</button>
+                                        <button type="button" class="placeholder-pill" onclick="insertRawCSPlaceholder('{{ divider }}\n\n')">+ {{ divider }}</button>
+                                    </div>
+
+                                    <!-- Callouts & Interactive -->
+                                    <div class="palette-group">
+                                        <span class="group-label">Callouts:</span>
+                                        <button type="button" class="placeholder-pill" onclick="insertRawCSPlaceholder('{{ callout: Key Milestone | Implementation finished 2 weeks ahead of schedule. }}\n\n')">+ {{ callout }}</button>
+                                        <button type="button" class="placeholder-pill" onclick="wrapCSPlaceholder('tip', 'Tip: Early stakeholder training increased adoption by 40%.')">+ {{ tip }}</button>
+                                        <button type="button" class="placeholder-pill" onclick="insertRawCSPlaceholder('{{ button: Request Case Study Demo | /enquiry.html }}\n\n')">+ {{ button }}</button>
+                                        <button type="button" class="placeholder-pill" onclick="insertRawCSPlaceholder('{{ link: Contact Our Team | /enquiry.html }}')">+ {{ link }}</button>
+                                    </div>
+
+                                    <!-- Attached Image Pills -->
+                                    <div class="palette-group" id="csAttachedImagePillsGroup">
+                                        <span class="group-label">Images:</span>
+                                        <button type="button" class="placeholder-pill" onclick="promptCSImageLink()">+ {{ image_link }}</button>
+                                    </div>
+                                </div>
                             </div>
 
-                            <!-- Case Study Toolbar with Specialized Stat & Phase buttons -->
-                            <div class="formatting-toolbar" id="csEditorToolbar">
-                                <span class="toolbar-group-label">Case Study Blocks:</span>
-                                <button type="button" class="toolbar-btn" style="background:#e8f5e9; font-weight:800; color:var(--green-dark);" onclick="insertCSTag('stat')">+ Stat Card</button>
-                                <button type="button" class="toolbar-btn" style="background:#fef2f2; font-weight:800; color:#b91c1c;" onclick="insertCSTag('challenge')">+ Challenge</button>
-                                <button type="button" class="toolbar-btn" style="background:#f0fdf4; font-weight:800; color:#15803d;" onclick="insertCSTag('solution')">+ Solution</button>
-                                <button type="button" class="toolbar-btn" style="background:#ecfdf5; font-weight:800; color:#047857;" onclick="insertCSTag('results')">+ Results</button>
+                            <!-- 3. Split Layout: Code/Placeholder Textarea on Left, Live Preview on Right -->
+                            <div class="split-layout">
+                                <div class="editor-pane">
+                                    <div class="pane-header">
+                                        <h4>
+                                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                                            Case Study Content (With Placeholders)
+                                        </h4>
+                                        <span id="csCharCount" style="font-size:0.8rem; color:var(--text-soft);">0 chars</span>
+                                    </div>
+                                    <textarea id="csContent" class="content-editor-textarea" placeholder="Type your case study content here or tap placeholders from above..." oninput="updateLiveCSPreview()" required></textarea>
+                                </div>
 
-                                <span class="toolbar-group-label" style="margin-left:0.5rem;">Headings:</span>
-                                <button type="button" class="toolbar-btn" onclick="insertCSTag('h1')">H1</button>
-                                <button type="button" class="toolbar-btn" onclick="insertCSTag('h2')">H2</button>
-                                <button type="button" class="toolbar-btn" onclick="insertCSTag('h3')">H3</button>
-
-                                <span class="toolbar-group-label">Format:</span>
-                                <button type="button" class="toolbar-btn" onclick="insertCSTag('bold')">Bold</button>
-                                <button type="button" class="toolbar-btn" onclick="insertCSTag('italic')">Italic</button>
-                                <button type="button" class="toolbar-btn" onclick="insertCSTag('bullet')">List</button>
-                                <button type="button" class="toolbar-btn" onclick="insertCSTag('quote')">Quote</button>
-                                <button type="button" class="toolbar-btn" onclick="insertCSTag('callout')">Callout</button>
-                                <button type="button" class="toolbar-btn" onclick="insertCSTag('tip')">Tip</button>
-                                <button type="button" class="toolbar-btn" onclick="insertCSTag('button')">Button</button>
-                                <button type="button" class="toolbar-btn" onclick="insertCSTag('divider')">Divider</button>
-                            </div>
-
-                            <!-- Textarea Editor -->
-                            <div id="csEditorViewWrap">
-                                <textarea id="csContent" class="form-textarea" placeholder="Write case study details using formatting tags and placeholders..." required oninput="updateLiveCSPreview()"></textarea>
-                            </div>
-
-                            <!-- Live Preview View -->
-                            <div id="csPreviewViewWrap" style="display:none;">
-                                <div class="preview-box">
-                                    <div class="preview-header">
-                                        <div class="preview-meta-row">
-                                            <span class="preview-category-badge" id="csPrevCategoryBadge">Technology</span>
-                                            <span id="csPrevDate">Today</span>
+                                <div class="preview-pane">
+                                    <div class="pane-header">
+                                        <h4>
+                                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                                            Live Rendered Preview
+                                        </h4>
+                                        <span style="font-size:0.8rem; color:var(--green-main); font-weight:700;">Real-time update</span>
+                                    </div>
+                                    <div class="preview-content-box" id="csLivePreviewContainer">
+                                        <div style="color:var(--text-soft); text-align:center; padding-top:4rem;">
+                                            Start typing or select a case study to see the live rendered preview here.
                                         </div>
-                                        <h1 class="preview-title" id="csPrevTitle">Case Study Title Preview</h1>
-                                    </div>
-                                    <div id="csPrevBannerWrap" style="display:none; margin:1.5rem 0; border-radius:12px; overflow:hidden;">
-                                        <img id="csPrevBannerImg" src="" alt="Banner" style="width:100%; max-height:360px; object-fit:cover;">
-                                    </div>
-                                    <div class="preview-content-box" id="csPreviewRendered">
-                                        <p style="color:var(--text-soft); font-style:italic;">Type content above to see live preview...</p>
                                     </div>
                                 </div>
                             </div>
@@ -2052,56 +2117,114 @@ $admin_management_link_visible = isset($_SESSION['superadmin_access']) && $_SESS
         // =========================================================================
         let attachedCSImages = {};
 
-        function renderAttachedCSImages() {
-            const strip = document.getElementById('csAttachedImagesStrip');
-            if (!strip) return;
-            strip.innerHTML = '';
-
-            const keys = Object.keys(attachedCSImages);
-            if (keys.length === 0) {
-                strip.style.display = 'none';
-                document.getElementById('csImagesJson').value = '{}';
-                return;
+        // Live Slug generator from Case Study Title
+        function handleCSTitleInput(title) {
+            const slugInput = document.getElementById('csSlug');
+            if (slugInput && (!slugInput.dataset.manual || slugInput.value === '')) {
+                slugInput.value = title.toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/(^-|-$)/g, '');
             }
-
-            strip.style.display = 'grid';
-            keys.forEach(k => {
-                const url = attachedCSImages[k];
-                const card = document.createElement('div');
-                card.className = 'attached-img-card';
-                card.innerHTML = `
-                    <img src="${url}" alt="${k}">
-                    <div class="card-info">
-                        <strong>{{ ${k} }}</strong>
-                        <div style="font-size:0.75rem; color:var(--text-soft); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${url}</div>
-                        <div class="card-actions">
-                            <button type="button" class="btn-copy-tag" onclick="copyCSTag('{{ ${k} }}')">Copy Tag</button>
-                            <button type="button" class="btn-remove-img" onclick="removeCSImage('${k}')">Remove</button>
-                        </div>
-                    </div>
-                `;
-                strip.appendChild(card);
-            });
-
-            document.getElementById('csImagesJson').value = JSON.stringify(attachedCSImages);
             updateLiveCSPreview();
         }
 
-        function copyCSTag(tag) {
-            navigator.clipboard.writeText(tag).then(() => {
-                alert(`Placeholder tag copied: ${tag}\nPaste it into your case study content.`);
-            }).catch(() => {
-                prompt('Copy tag:', tag);
-            });
+        document.getElementById('csSlug')?.addEventListener('input', function() {
+            this.dataset.manual = 'true';
+        });
+        document.getElementById('csClient')?.addEventListener('input', updateLiveCSPreview);
+        document.getElementById('csCategory')?.addEventListener('input', updateLiveCSPreview);
+        document.getElementById('csAuthor')?.addEventListener('input', updateLiveCSPreview);
+
+        // Tap to Paste: Wraps selection or inserts template into Case Study editor
+        function wrapCSPlaceholder(tag, sampleText) {
+            const textarea = document.getElementById('csContent');
+            if (!textarea) return;
+
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+            const selected = text.substring(start, end);
+
+            const openTag = `{{ ${tag} }}`;
+            const closeTag = `{{ /${tag} }}`;
+
+            let replacement;
+            if (selected) {
+                replacement = `${openTag}${selected}${closeTag}`;
+            } else {
+                replacement = `${openTag}${sampleText}${closeTag}`;
+            }
+
+            textarea.value = text.substring(0, start) + replacement + text.substring(end);
+            textarea.focus();
+
+            if (selected) {
+                textarea.selectionStart = start;
+                textarea.selectionEnd = start + replacement.length;
+            } else {
+                textarea.selectionStart = start + openTag.length;
+                textarea.selectionEnd = start + openTag.length + sampleText.length;
+            }
+
+            updateLiveCSPreview();
         }
 
-        function removeCSImage(k) {
-            delete attachedCSImages[k];
-            renderAttachedCSImages();
+        // Tap to Paste: Raw insertion into Case Study editor
+        function insertRawCSPlaceholder(tagString) {
+            const textarea = document.getElementById('csContent');
+            if (!textarea) return;
+
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+
+            textarea.value = text.substring(0, start) + tagString + text.substring(end);
+            textarea.focus();
+            textarea.selectionStart = textarea.selectionEnd = start + tagString.length;
+
+            updateLiveCSPreview();
         }
 
-        function handleCSImageFiles(files) {
+        // Case Study Online Image Link Insert
+        function insertCSOnlineImagePlaceholder() {
+            const urlInput = document.getElementById('csOnlineImgUrl');
+            const capInput = document.getElementById('csOnlineImgCaption');
+            const url = (urlInput.value || '').trim();
+            const cap = (capInput.value || '').trim();
+
+            if (!url) {
+                alert('Please enter an image URL.');
+                urlInput.focus();
+                return;
+            }
+
+            let tag = `{{ image_link: ${url}`;
+            if (cap) tag += ` | ${cap}`;
+            tag += ` }}\n\n`;
+
+            insertRawCSPlaceholder(tag);
+            urlInput.value = '';
+            capInput.value = '';
+        }
+
+        function promptCSImageLink() {
+            const url = prompt('Enter image URL (e.g., https://yourdomain.com/photo.jpg):');
+            if (!url || !url.trim()) return;
+            const cap = prompt('Optional caption (or press Enter to skip):');
+            let tag = `{{ image_link: ${url.trim()}`;
+            if (cap && cap.trim()) tag += ` | ${cap.trim()}`;
+            tag += ` }}\n\n`;
+            insertRawCSPlaceholder(tag);
+        }
+
+        // Multi-image upload at top of Case Study editor
+        function handleCSMultipleImageUpload(files) {
             if (!files || files.length === 0) return;
+
+            const dropzone = document.getElementById('csImageDropzone');
+            if (dropzone) dropzone.style.opacity = '0.5';
+
+            let uploadsRemaining = files.length;
 
             Array.from(files).forEach(file => {
                 const formData = new FormData();
@@ -2114,198 +2237,303 @@ $admin_management_link_visible = isset($_SESSION['superadmin_access']) && $_SESS
                 .then(res => res.json())
                 .then(data => {
                     if (data.success && data.url) {
-                        let idx = 1;
-                        while (attachedCSImages['image_' + idx]) {
-                            idx++;
+                        let imgUrl = data.url;
+                        if (imgUrl && !imgUrl.startsWith('http://') && !imgUrl.startsWith('https://') && !imgUrl.startsWith('/')) {
+                            imgUrl = '/' + imgUrl;
                         }
-                        const placeholderKey = 'image_' + idx;
-                        attachedCSImages[placeholderKey] = data.url;
-                        renderAttachedCSImages();
+                        let nextIndex = 1;
+                        while (attachedCSImages['image_' + nextIndex]) {
+                            nextIndex++;
+                        }
+                        const key = 'image_' + nextIndex;
+                        attachedCSImages[key] = imgUrl;
 
                         if (!document.getElementById('csFeaturedImg').value) {
-                            document.getElementById('csFeaturedImg').value = data.url;
-                            updateLiveCSPreview();
+                            document.getElementById('csFeaturedImg').value = imgUrl;
                         }
+
+                        renderAttachedCSImages();
+                        updateLiveCSPreview();
                     } else {
                         alert(data.error || 'Failed to upload case study image.');
                     }
                 })
                 .catch(err => {
-                    console.error('Upload error:', err);
-                    alert('Network error while uploading case study image.');
+                    console.error('Case study upload error:', err);
+                    alert('Error uploading case study image.');
+                })
+                .finally(() => {
+                    uploadsRemaining--;
+                    if (uploadsRemaining === 0 && dropzone) {
+                        dropzone.style.opacity = '1';
+                    }
                 });
             });
         }
 
-        const csDropZone = document.getElementById('csDropZone');
-        if (csDropZone) {
-            csDropZone.addEventListener('click', () => {
-                document.getElementById('csImageFileInput').click();
+        // Drag & Drop listeners for Case Study dropzone
+        const csDropzoneEl = document.getElementById('csImageDropzone');
+        if (csDropzoneEl) {
+            ['dragenter', 'dragover'].forEach(evt => {
+                csDropzoneEl.addEventListener(evt, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    csDropzoneEl.classList.add('dragover');
+                });
             });
-            csDropZone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                csDropZone.classList.add('dragover');
+            ['dragleave', 'drop'].forEach(evt => {
+                csDropzoneEl.addEventListener(evt, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    csDropzoneEl.classList.remove('dragover');
+                });
             });
-            csDropZone.addEventListener('dragleave', () => {
-                csDropZone.classList.remove('dragover');
-            });
-            csDropZone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                csDropZone.classList.remove('dragover');
-                handleCSImageFiles(e.dataTransfer.files);
+            csDropzoneEl.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                if (dt && dt.files && dt.files.length) {
+                    handleCSMultipleImageUpload(dt.files);
+                }
             });
         }
 
-        function handleCSTitleInput(val) {
-            const slugInput = document.getElementById('csSlug');
-            if (!slugInput.dataset.manual) {
-                slugInput.value = generateSlug(val);
+        // Render uploaded image cards & dynamic palette chips for Case Study
+        function renderAttachedCSImages() {
+            const grid = document.getElementById('csUploadedImagesGrid');
+            const pillsGroup = document.getElementById('csAttachedImagePillsGroup');
+            if (!grid) return;
+
+            grid.innerHTML = '';
+            const jsonInput = document.getElementById('csImagesJson');
+            if (jsonInput) jsonInput.value = JSON.stringify(attachedCSImages);
+
+            if (pillsGroup) {
+                pillsGroup.innerHTML = `
+                    <span class="group-label">Images:</span>
+                    <button type="button" class="placeholder-pill" onclick="promptCSImageLink()">+ {{ image_link }}</button>
+                `;
             }
+
+            Object.entries(attachedCSImages).forEach(([key, url]) => {
+                const card = document.createElement('div');
+                card.className = 'image-card-chip';
+                card.innerHTML = `
+                    <div class="image-thumb-wrap">
+                        <img src="${url}" alt="${key}">
+                    </div>
+                    <div class="image-tag-badge">{{ ${key} }}</div>
+                    <div class="image-actions-row">
+                        <button type="button" class="image-action-btn btn-insert-tag" onclick="insertRawCSPlaceholder('{{ ${key} }}\\n\\n')" title="Insert {{ ${key} }} into case study">
+                            Insert Tag
+                        </button>
+                        <button type="button" class="image-action-btn btn-del-img" onclick="removeAttachedCSImage('${key}')" title="Remove image">
+                            &times;
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+
+                if (pillsGroup) {
+                    const pillBtn = document.createElement('button');
+                    pillBtn.type = 'button';
+                    pillBtn.className = 'placeholder-pill';
+                    pillBtn.style.background = 'rgba(15, 56, 28, 0.15)';
+                    pillBtn.innerText = `+ {{ ${key} }}`;
+                    pillBtn.onclick = () => insertRawCSPlaceholder(`{{ ${key} }}\n\n`);
+                    pillsGroup.appendChild(pillBtn);
+                }
+            });
+        }
+
+        function removeAttachedCSImage(key) {
+            delete attachedCSImages[key];
+            renderAttachedCSImages();
             updateLiveCSPreview();
         }
 
-        const csSlugInput = document.getElementById('csSlug');
-        if (csSlugInput) {
-            csSlugInput.addEventListener('input', function() {
-                this.dataset.manual = 'true';
+        // Client-side parser for Live Real-Time Interactive Case Study Preview
+        function parseCSPlaceholdersJS(content, imagesMap) {
+            if (!content) return '';
+            let text = content;
+
+            // 1. Metric / Stat Card: {{ stat: 95% | Impact metric achieved }}
+            text = text.replace(/\{\{\s*stat\s*:\s*([^|{}]+)\|\s*([^}]+)\s*\}\}/gi, (m, val, desc) => {
+                return `<div class="cs-stat-card"><div class="cs-stat-value">${escapeHtml(val.trim())}</div><div class="cs-stat-label">${escapeHtml(desc.trim())}</div></div>`;
             });
-        }
+            text = text.replace(/(?:<div class="cs-stat-card">[\s\S]*?<\/div><\/div>\s*){2,}/gi, (m) => {
+                return `<div class="cs-stat-grid">${m.trim()}</div>`;
+            });
 
-        function insertCSTag(tag) {
-            const textarea = document.getElementById('csContent');
-            if (!textarea) return;
+            // 2. Phase Callouts: Challenge, Solution, Results
+            text = text.replace(/\{\{\s*challenge\s*\}\}([\s\S]*?)\{\{\s*\/challenge\s*\}\}/gi, (m, p1) => {
+                const icon = '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>';
+                return `<div class="cs-phase-box cs-phase-challenge"><div class="cs-phase-header">${icon}<span>The Challenge</span></div><div class="cs-phase-body">${p1.trim()}</div></div>`;
+            });
 
-            const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
-            const sel = textarea.value.substring(start, end);
-            let snippet = '';
+            text = text.replace(/\{\{\s*solution\s*\}\}([\s\S]*?)\{\{\s*\/solution\s*\}\}/gi, (m, p1) => {
+                const icon = '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
+                return `<div class="cs-phase-box cs-phase-solution"><div class="cs-phase-header">${icon}<span>The Solution</span></div><div class="cs-phase-body">${p1.trim()}</div></div>`;
+            });
 
-            switch(tag) {
-                case 'stat':
-                    snippet = `\n{{ stat: +150% | Metric Outcome Achieved }}\n`;
-                    break;
-                case 'challenge':
-                    snippet = `\n{{ challenge }}\n${sel || 'Describe the core institutional or business bottleneck...'}\n{{ /challenge }}\n`;
-                    break;
-                case 'solution':
-                    snippet = `\n{{ solution }}\n${sel || 'Describe the SmarTech architecture and implementation solution...'}\n{{ /solution }}\n`;
-                    break;
-                case 'results':
-                    snippet = `\n{{ results }}\n${sel || 'Detail measurable outcomes, efficiency gains, and ROI...'}\n{{ /results }}\n`;
-                    break;
-                case 'h1':
-                case 'h2':
-                case 'h3':
-                    snippet = `\n{{ ${tag}: ${sel || 'Section Title'} }}\n`;
-                    break;
-                case 'bold':
-                    snippet = `{{ bold }}${sel || 'important point'}{{ /bold }}`;
-                    break;
-                case 'italic':
-                    snippet = `{{ italic }}${sel || 'italicized note'}{{ /italic }}`;
-                    break;
-                case 'bullet':
-                    snippet = `\n{{ bullet }}${sel || 'Key milestone or feature'}{{ /bullet }}\n`;
-                    break;
-                case 'quote':
-                    snippet = `\n{{ quote }}\n${sel || 'Client testimonial or leadership quote...'}\n{{ /quote }}\n`;
-                    break;
-                case 'callout':
-                    snippet = `\n{{ callout: Deployment Milestone | ${sel || 'Highlight of deployment phase or certification.'} }}\n`;
-                    break;
-                case 'tip':
-                    snippet = `\n{{ tip }}${sel || 'Best practice discovered during implementation.'}{{ /tip }}\n`;
-                    break;
-                case 'button':
-                    snippet = `\n{{ button: Request Case Study Demo | /enquiry.html }}\n`;
-                    break;
-                case 'divider':
-                    snippet = `\n{{ divider }}\n`;
-                    break;
-                default:
-                    snippet = `{{ ${tag} }}${sel}{{ /${tag} }}`;
+            text = text.replace(/\{\{\s*results\s*\}\}([\s\S]*?)\{\{\s*\/results\s*\}\}/gi, (m, p1) => {
+                const icon = '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>';
+                return `<div class="cs-phase-box cs-phase-results"><div class="cs-phase-header">${icon}<span>The Impact &amp; Results</span></div><div class="cs-phase-body">${p1.trim()}</div></div>`;
+            });
+
+            // 3. Divider
+            text = text.replace(/\{\{\s*divider\s*\}\}/gi, '<hr class="blog-divider">');
+
+            // 4. Title & Headings
+            text = text.replace(/\{\{\s*title\s*\}\}([\s\S]*?)\{\{\s*\/title\s*\}\}/gi, '<h1 class="blog-display-title">$1</h1>');
+            text = text.replace(/\{\{\s*title\s*:\s*([^}\n]+)\s*\}\}/gi, '<h1 class="blog-display-title">$1</h1>');
+
+            for (let i = 1; i <= 6; i++) {
+                const reTag = new RegExp('\\{\\{\\s*h' + i + '\\s*\\}\\}([\\s\\S]*?)\\{\\{\\s*\\/h' + i + '\\s*\\}\\}', 'gi');
+                const reLine = new RegExp('\\{\\{\\s*h' + i + '\\s*:\\s*([^}\\n]+)\\s*\\}\\}', 'gi');
+                text = text.replace(reTag, `<h${i} class="blog-h${i}">$1</h${i}>`);
+                text = text.replace(reLine, `<h${i} class="blog-h${i}">$1</h${i}>`);
             }
 
-            textarea.setRangeText(snippet, start, end, 'end');
-            textarea.focus();
-            updateLiveCSPreview();
+            // 5. Formatting
+            text = text.replace(/\{\{\s*(?:bold|b)\s*\}\}([\s\S]*?)\{\{\s*\/(?:bold|b)\s*\}\}/gi, '<strong class="blog-strong">$1</strong>');
+            text = text.replace(/\{\{\s*(?:italic|i)\s*\}\}([\s\S]*?)\{\{\s*\/(?:italic|i)\s*\}\}/gi, '<em class="blog-em">$1</em>');
+            text = text.replace(/\{\{\s*(?:underline|u)\s*\}\}([\s\S]*?)\{\{\s*\/(?:underline|u)\s*\}\}/gi, '<u class="blog-underline">$1</u>');
+            text = text.replace(/\{\{\s*highlight\s*\}\}([\s\S]*?)\{\{\s*\/highlight\s*\}\}/gi, '<mark class="blog-mark">$1</mark>');
+
+            // 6. Quotes & Code
+            text = text.replace(/\{\{\s*quote\s*\}\}([\s\S]*?)\{\{\s*\/quote\s*\}\}/gi, (m, p1) => {
+                return `<blockquote class="blog-quote">${p1.trim()}</blockquote>`;
+            });
+            text = text.replace(/\{\{\s*code\s*\}\}([\s\S]*?)\{\{\s*\/code\s*\}\}/gi, (m, p1) => {
+                return `<pre class="blog-code-block"><code>${escapeHtml(p1)}</code></pre>`;
+            });
+
+            // 7. Callouts & Tips
+            text = text.replace(/\{\{\s*callout\s*:\s*([^|{}]+)(?:\|\s*([^}]+))?\}\}/gi, (m, title, body) => {
+                return `<aside class="blog-callout"><div><strong>${escapeHtml(title.trim())}</strong><p style="margin:4px 0 0;">${(body || '').trim()}</p></div></aside>`;
+            });
+            text = text.replace(/\{\{\s*callout\s*\}\}([\s\S]*?)\{\{\s*\/callout\s*\}\}/gi, (m, p1) => {
+                return `<aside class="blog-callout"><div>${p1.trim()}</div></aside>`;
+            });
+            text = text.replace(/\{\{\s*tip\s*\}\}([\s\S]*?)\{\{\s*\/tip\s*\}\}/gi, (m, p1) => {
+                return `<div class="blog-tip-box"><div>${p1.trim()}</div></div>`;
+            });
+
+            // 8. CTA Buttons & Links
+            text = text.replace(/\{\{\s*button\s*:\s*([^|{}]+)(?:\|\s*([^}]+))?\}\}/gi, (m, label, url) => {
+                return `<div style="margin:1.4rem 0; text-align:center;"><a href="${escapeHtml((url || '#').trim())}" class="blog-action-btn" target="_blank">${escapeHtml(label.trim())} &rarr;</a></div>`;
+            });
+            text = text.replace(/\{\{\s*link\s*:\s*([^|{}]+)(?:\|\s*([^}]+))?\}\}/gi, (m, label, url) => {
+                return `<a href="${escapeHtml((url || '#').trim())}" class="blog-inline-link" target="_blank">${escapeHtml(label.trim())}</a>`;
+            });
+
+            // 9. External Images
+            text = text.replace(/\{\{\s*image_link\s*:\s*([^|{}]+)(?:\|\s*([^}]+))?\}\}/gi, (m, url, cap) => {
+                const c = cap ? `<figcaption class="blog-fig-caption">${escapeHtml(cap.trim())}</figcaption>` : '';
+                return `<figure class="blog-figure"><img src="${escapeHtml(url.trim())}" class="blog-responsive-img" alt="Case Study Image">${c}</figure>`;
+            });
+
+            // 10. Attached sequential images {{ image_1 }}, {{ image_2 }}...
+            text = text.replace(/\{\{\s*(image_\d+)(?:\s*\|\s*([^}]+))?\s*\}\}/gi, (m, tag, cap) => {
+                const k = tag.toLowerCase().trim();
+                let src = imagesMap[k];
+                if (!src) return `<div class="blog-img-missing"><span>[Attached placeholder ${escapeHtml(k)} pending upload]</span></div>`;
+                if (!src.startsWith('http://') && !src.startsWith('https://') && !src.startsWith('/')) {
+                    src = '/' + src;
+                }
+                const c = cap ? `<figcaption class="blog-fig-caption">${escapeHtml(cap.trim())}</figcaption>` : '';
+                return `<figure class="blog-figure"><img src="${escapeHtml(src)}" class="blog-responsive-img" alt="Uploaded Visual">${c}</figure>`;
+            });
+
+            // 11. Generic {{ image }}
+            text = text.replace(/\{\{\s*image(?:\s*\|\s*([^}]+))?\s*\}\}/gi, (m, cap) => {
+                let first = Object.values(imagesMap)[0];
+                if (!first) return `<div class="blog-img-missing"><span>[No image attached]</span></div>`;
+                if (!first.startsWith('http://') && !first.startsWith('https://') && !first.startsWith('/')) {
+                    first = '/' + first;
+                }
+                const c = cap ? `<figcaption class="blog-fig-caption">${escapeHtml(cap.trim())}</figcaption>` : '';
+                return `<figure class="blog-figure"><img src="${escapeHtml(first)}" class="blog-responsive-img" alt="Uploaded Visual">${c}</figure>`;
+            });
+
+            // 12. Bullets
+            text = text.replace(/(?:\{\{\s*(?:bullet|li)\s*\}\}([\s\S]*?)\{\{\s*\/(?:bullet|li)\s*\}\}\s*)+/gi, (match) => {
+                let itemsHtml = '';
+                const itemRegex = /\{\{\s*(?:bullet|li)\s*\}\}([\s\S]*?)\{\{\s*\/(?:bullet|li)\s*\}\}/gi;
+                let itemMatch;
+                while ((itemMatch = itemRegex.exec(match)) !== null) {
+                    itemsHtml += `<li>${itemMatch[1].trim()}</li>`;
+                }
+                return `<ul class="blog-bullet-list">${itemsHtml}</ul>`;
+            });
+
+            // 13. Numbers
+            text = text.replace(/(?:\{\{\s*number\s*\}\}([\s\S]*?)\{\{\s*\/number\s*\}\}\s*)+/gi, (match) => {
+                let itemsHtml = '';
+                const itemRegex = /\{\{\s*number\s*\}\}([\s\S]*?)\{\{\s*\/number\s*\}\}/gi;
+                let itemMatch;
+                while ((itemMatch = itemRegex.exec(match)) !== null) {
+                    itemsHtml += `<li>${itemMatch[1].trim()}</li>`;
+                }
+                return `<ol class="blog-ordered-list">${itemsHtml}</ol>`;
+            });
+
+            // 14. Paragraphs
+            const blocks = text.split(/\n\s*\n/);
+            const result = blocks.map(b => {
+                const trimmed = b.trim();
+                if (!trimmed) return '';
+                if (/^<(?:h[1-6]|ul|ol|blockquote|pre|figure|aside|div|hr)/i.test(trimmed)) {
+                    return trimmed;
+                }
+                return `<p class="blog-p">${trimmed.replace(/\n/g, '<br>')}</p>`;
+            }).filter(Boolean);
+
+            return result.join('\n\n');
         }
 
-        function switchCSTab(tab) {
-            const btnEditor = document.getElementById('csTabEditorBtn');
-            const btnPrev = document.getElementById('csTabPreviewBtn');
-            const wrapEditor = document.getElementById('csEditorViewWrap');
-            const wrapPrev = document.getElementById('csPreviewViewWrap');
-            const toolbar = document.getElementById('csEditorToolbar');
-
-            if (tab === 'editor') {
-                btnEditor.classList.add('active');
-                btnPrev.classList.remove('active');
-                wrapEditor.style.display = 'block';
-                wrapPrev.style.display = 'none';
-                toolbar.style.display = 'flex';
-            } else {
-                btnEditor.classList.remove('active');
-                btnPrev.classList.add('active');
-                wrapEditor.style.display = 'none';
-                wrapPrev.style.display = 'block';
-                toolbar.style.display = 'none';
-                updateLiveCSPreview();
-            }
-        }
-
-        let csPreviewDebounceTimer = null;
+        // Updates Live Rendered Preview for Case Study
         function updateLiveCSPreview() {
-            clearTimeout(csPreviewDebounceTimer);
-            csPreviewDebounceTimer = setTimeout(() => {
-                const title = document.getElementById('csTitle')?.value || 'Case Study Title Preview';
-                const cat = document.getElementById('csCategory')?.value || 'Technology';
-                const banner = document.getElementById('csFeaturedImg')?.value || '';
-                const content = document.getElementById('csContent')?.value || '';
+            const container = document.getElementById('csLivePreviewContainer');
+            const textarea = document.getElementById('csContent');
+            const charCount = document.getElementById('csCharCount');
+            if (!container || !textarea) return;
 
-                const prevTitle = document.getElementById('csPrevTitle');
-                const prevCat = document.getElementById('csPrevCategoryBadge');
-                const prevBannerWrap = document.getElementById('csPrevBannerWrap');
-                const prevBannerImg = document.getElementById('csPrevBannerImg');
-                const prevRendered = document.getElementById('csPreviewRendered');
+            const content = textarea.value;
+            if (charCount) charCount.innerText = `${content.length} chars`;
 
-                if (prevTitle) prevTitle.innerText = title;
-                if (prevCat) prevCat.innerText = cat;
+            const title = (document.getElementById('csTitle')?.value || '').trim();
+            const client = (document.getElementById('csClient')?.value || '').trim();
+            const featuredImg = (document.getElementById('csFeaturedImg')?.value || '').trim();
+            const category = (document.getElementById('csCategory')?.value || 'Technology').trim();
+            const author = (document.getElementById('csAuthor')?.value || 'SmarTech Team').trim();
 
-                if (prevBannerWrap && prevBannerImg) {
-                    if (banner) {
-                        prevBannerImg.src = banner;
-                        prevBannerWrap.style.display = 'block';
-                    } else {
-                        prevBannerWrap.style.display = 'none';
-                    }
-                }
+            let headerHtml = '';
+            if (title) {
+                headerHtml += `
+                    <div style="border-bottom: 1px solid rgba(34, 139, 34, 0.12); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                        <div style="display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center; margin-bottom:0.6rem;">
+                            <span class="badge">${escapeHtml(category)}</span>
+                            ${client ? `<span class="badge" style="background:rgba(15, 56, 28, 0.08); color:var(--green-dark);">Client: ${escapeHtml(client)}</span>` : ''}
+                        </div>
+                        <h2 style="margin: 0.4rem 0 0.6rem; color: var(--green-dark); font-size: 1.8rem; line-height: 1.25;">${escapeHtml(title)}</h2>
+                        <div style="color:var(--text-soft); font-size:0.88rem;">By ${escapeHtml(author)} &bull; ${new Date().toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})}</div>
+                    </div>
+                `;
+            }
 
-                if (!content.trim()) {
-                    if (prevRendered) prevRendered.innerHTML = '<p style="color:var(--text-soft); font-style:italic;">Type content above to see live preview...</p>';
-                    return;
-                }
+            if (featuredImg) {
+                headerHtml += `
+                    <div style="margin-bottom:1.5rem; border-radius:12px; overflow:hidden; max-height:280px;">
+                        <img src="${escapeHtml(featuredImg)}" style="width:100%; height:100%; object-fit:cover; display:block;" alt="Featured banner">
+                    </div>
+                `;
+            }
 
-                fetch('/api/case-study/preview', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        content: content,
-                        images_json: attachedCSImages
-                    })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success && data.html) {
-                        if (prevRendered) prevRendered.innerHTML = data.html;
-                    }
-                })
-                .catch(err => {
-                    console.error('CS Preview error:', err);
-                });
-            }, 300);
+            const parsedBody = parseCSPlaceholdersJS(content, attachedCSImages);
+            container.innerHTML = headerHtml + (parsedBody || '<p style="color:var(--text-soft); font-style:italic;">[Case study content will appear here]</p>');
         }
 
+        // Save Case Study via AJAX
         function saveCaseStudy(e) {
             e.preventDefault();
             const btn = document.getElementById('saveCSBtn');
@@ -2361,6 +2589,7 @@ $admin_management_link_visible = isset($_SESSION['superadmin_access']) && $_SESS
             });
         }
 
+        // Edit existing Case Study
         function editCaseStudy(id) {
             fetch('/api/case-study/get?id=' + id)
             .then(res => res.json())
@@ -2403,6 +2632,7 @@ $admin_management_link_visible = isset($_SESSION['superadmin_access']) && $_SESS
             });
         }
 
+        // Reset to Blank Case Study
         function openNewCaseStudy() {
             document.getElementById('caseStudyForm').reset();
             document.getElementById('csId').value = '';
