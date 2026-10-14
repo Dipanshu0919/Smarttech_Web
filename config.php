@@ -22,6 +22,7 @@ define('BASE_DIR', __DIR__);
 define('BASE_URL', '/');
 define('ORDER_FILES_DIR', BASE_DIR . '/orderformfiles');
 define('BLOG_IMAGES_DIR', BASE_DIR . '/assets/blog_images');
+define('CASE_STUDY_IMAGES_DIR', BASE_DIR . '/assets/case_study_images');
 
 // Session lifetime (31 days)
 ini_set('session.cookie_lifetime', 60 * 60 * 24 * 31);
@@ -70,6 +71,22 @@ function initDatabaseTables($pdo, $is_sqlite = false) {
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
             );
+            CREATE TABLE IF NOT EXISTS case_studies (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT NOT NULL,
+                slug TEXT UNIQUE NOT NULL,
+                client_name TEXT DEFAULT '',
+                meta_description TEXT DEFAULT '',
+                keywords TEXT DEFAULT '',
+                author TEXT DEFAULT 'SmarTech Team',
+                category TEXT DEFAULT 'Technology',
+                featured_image TEXT DEFAULT '',
+                content TEXT NOT NULL,
+                images_json TEXT DEFAULT '{}',
+                status TEXT DEFAULT 'published',
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
         ");
 
         try {
@@ -110,6 +127,22 @@ function initDatabaseTables($pdo, $is_sqlite = false) {
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 title VARCHAR(255) NOT NULL,
                 slug VARCHAR(255) UNIQUE NOT NULL,
+                meta_description TEXT,
+                keywords TEXT,
+                author VARCHAR(100) DEFAULT 'SmarTech Team',
+                category VARCHAR(100) DEFAULT 'Technology',
+                featured_image VARCHAR(255),
+                content LONGTEXT NOT NULL,
+                images_json TEXT,
+                status VARCHAR(50) DEFAULT 'published',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            );
+            CREATE TABLE IF NOT EXISTS case_studies (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                title VARCHAR(255) NOT NULL,
+                slug VARCHAR(255) UNIQUE NOT NULL,
+                client_name VARCHAR(255) DEFAULT '',
                 meta_description TEXT,
                 keywords TEXT,
                 author VARCHAR(100) DEFAULT 'SmarTech Team',

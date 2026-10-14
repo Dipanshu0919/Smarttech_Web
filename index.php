@@ -1,6 +1,7 @@
 <?php
 require_once 'config.php';
 require_once 'blog-engine.php';
+require_once 'case-study-engine.php';
 
 if (!is_dir(ORDER_FILES_DIR)) {
     mkdir(ORDER_FILES_DIR, 0777, true);
@@ -150,8 +151,8 @@ if (basename($path) === 'index.php' || $path === '/index.php') {
     $path = '/';
 }
 
-// Normalize any sub-path asset request like /blog/assets/... to /assets/...
-if (preg_match('#^/blog/(assets/.*)$#', $path, $m)) {
+// Normalize any sub-path asset request like /blog/assets/... or /case-study/assets/... to /assets/...
+if (preg_match('#^/(?:blog|case-study|case-studies)/(assets/.*)$#', $path, $m)) {
     $path = '/' . $m[1];
 }
 
@@ -367,6 +368,98 @@ if ($path === '/api/blog/preview' && $request_method === 'POST') {
     send_json(['success' => true, 'html' => $html]);
 }
 
+if ($path === '/api/case-study/save' && $request_method === 'POST') {
+    adminRequired();
+    $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+    if (strpos($contentType, 'application/json') !== false) {
+        $data = json_decode(file_get_contents('php://input'), true) ?: [];
+    } else {
+        $data = $_POST;
+    }
+
+    try {
+        $id = save_case_study($data);
+        $saved = get_case_study_by_id($id);
+        send_json([
+            'success' => true,
+            'id' => $id,
+            'slug' => $saved['slug'] ?? '',
+            'message' => 'Case study saved successfully.'
+        ]);
+    } catch (Exception $e) {
+        send_json(['error' => $e->getMessage()], 400);
+    }
+}
+
+if ($path === '/api/case-study/delete' && $request_method === 'POST') {
+    adminRequired();
+    $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+    if (strpos($contentType, 'application/json') !== false) {
+        $data = json_decode(file_get_contents('php://input'), true) ?: [];
+        $id = $data['id'] ?? 0;
+    } else {
+        $id = $_POST['id'] ?? 0;
+    }
+
+    if (!$id) {
+        send_json(['error' => 'Case study ID required.'], 400);
+    }
+
+    delete_case_study($id);
+    send_json(['success' => true, 'message' => 'Case study deleted successfully.']);
+}
+
+if ($path === '/api/case-study/get' && $request_method === 'GET') {
+    adminRequired();
+    $id = $_GET['id'] ?? 0;
+    $cs = get_case_study_by_id($id);
+    if (!$cs) {
+        send_json(['error' => 'Case study not found.'], 404);
+    }
+    send_json(['success' => true, 'case_study' => $cs]);
+}
+
+if ($path === '/api/case-study/list' && $request_method === 'GET') {
+    adminRequired();
+    $caseStudies = get_all_case_studies();
+    send_json(['success' => true, 'case_studies' => $caseStudies]);
+}
+
+if ($path === '/api/case-study/upload-image' && $request_method === 'POST') {
+    adminRequired();
+    $file = $_FILES['image'] ?? null;
+    if (!$file) {
+        send_json(['error' => 'No image file uploaded.'], 400);
+    }
+
+    try {
+        $url = handle_case_study_image_upload($file);
+        send_json([
+            'success' => true,
+            'url' => $url,
+            'name' => basename($url),
+            'message' => 'Image uploaded successfully.'
+        ]);
+    } catch (Exception $e) {
+        send_json(['error' => $e->getMessage()], 400);
+    }
+}
+
+if ($path === '/api/case-study/preview' && $request_method === 'POST') {
+    adminRequired();
+    $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+    if (strpos($contentType, 'application/json') !== false) {
+        $data = json_decode(file_get_contents('php://input'), true) ?: [];
+    } else {
+        $data = $_POST;
+    }
+
+    $content = $data['content'] ?? '';
+    $images = $data['images_json'] ?? [];
+    $html = parseCaseStudyPlaceholders($content, $images);
+    send_json(['success' => true, 'html' => $html]);
+}
+
 if (preg_match('#^/dashboard/orders/(\d+)/delete$#', $path, $m) && $request_method === 'POST') {
     adminRequired();
     $order_id = $m[1];
@@ -475,6 +568,16 @@ if ($path === '/dashboard.php' && ($_GET['action'] ?? '') === 'delete_blog') {
         delete_blog_post($blog_id);
     }
     header('Location: dashboard.php#blogs');
+    exit;
+}
+
+if ($path === '/dashboard.php' && ($_GET['action'] ?? '') === 'delete_case_study') {
+    $cs_id = $_GET['id'] ?? 0;
+    if ($cs_id) {
+        adminRequired();
+        delete_case_study($cs_id);
+    }
+    header('Location: dashboard.php#case-studies');
     exit;
 }
 
@@ -599,11 +702,24 @@ $static_routes = [
     '/blog.html' => 'blog.php',
     '/blog.php' => 'blog.php',
     '/blog-post.php' => 'blog-post.php',
+    '/case-study' => 'case-study.php',
+    '/case-study.html' => 'case-study.php',
+    '/case-study.php' => 'case-study.php',
+    '/case-studies' => 'case-study.php',
+    '/case-studies.html' => 'case-study.php',
+    '/case-studies.php' => 'case-study.php',
+    '/case-study-post.php' => 'case-study-post.php',
 ];
 
 if (preg_match('#^/blog/([a-zA-Z0-9-]+)$#', $path, $m)) {
     $_GET['slug'] = $m[1];
     include 'blog-post.php';
+    exit;
+}
+
+if (preg_match('#^/(?:case-study|case-studies)/([a-zA-Z0-9-]+)$#', $path, $m)) {
+    $_GET['slug'] = $m[1];
+    include 'case-study-post.php';
     exit;
 }
 

@@ -307,6 +307,7 @@
             <li><a data-nav="qrcode" href="/qrvideo.html">QR Based Gharpatti</a></li>
             <li><a data-nav="career" href="/career.html">Career</a></li>
             <li><a data-nav="blog" href="/blog.html">Blog</a></li>
+            <li><a data-nav="casestudy" href="/case-study.html">Case Studies</a></li>
             <li><a data-nav="enquiry" href="/enquiry.html">Enquiry</a></li>
             <li><a data-nav="orderform" href="/orderform.html">Order Form</a></li>
             <li><a data-contact="true" href="/index.html">Contact</a></li>

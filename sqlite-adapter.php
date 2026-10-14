@@ -50,6 +50,15 @@ class SqliteCliStatement {
     public function fetchAll($mode = PDO::FETCH_ASSOC) {
         return $this->rows;
     }
+
+    public function fetchColumn($colNumber = 0) {
+        $row = $this->fetch();
+        if ($row && is_array($row)) {
+            $vals = array_values($row);
+            return $vals[$colNumber] ?? false;
+        }
+        return false;
+    }
 }
 
 class SqliteCliPDO {

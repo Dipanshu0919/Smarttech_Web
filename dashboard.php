@@ -2,14 +2,17 @@
 require_once 'config.php';
 require_once 'index.php';
 require_once 'blog-engine.php';
+require_once 'case-study-engine.php';
 
 $is_admin = dashboard_session_is_valid();
 $orders = fetch_rows("orders");
 $enquiries = fetch_rows("enquiries");
 $blogs = get_all_blogs();
+$case_studies = get_all_case_studies();
 $order_count = count($orders);
 $enquiry_count = count($enquiries);
 $blog_count = count($blogs);
+$case_study_count = count($case_studies);
 $latest_order = $orders[0] ?? null;
 $latest_enquiry = $enquiries[0] ?? null;
 $login_error = $_SESSION['login_error'] ?? null;
@@ -801,7 +804,12 @@ $admin_management_link_visible = isset($_SESSION['superadmin_access']) && $_SESS
                         <a href="#blogs">Blog Posts (<?= $blog_count ?>)</a>
                         <button type="button" class="btn-action btn-primary" onclick="openNewBlog()">
                             <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-                            Create New Blog
+                            Create Blog
+                        </button>
+                        <a href="#case-studies">Case Studies (<?= $case_study_count ?>)</a>
+                        <button type="button" class="btn-action btn-primary" onclick="openNewCaseStudy()">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                            Create Case Study
                         </button>
                         <a href="#orders">Orders (<?= $order_count ?>)</a>
                         <a href="#enquiries">Enquiries (<?= $enquiry_count ?>)</a>
@@ -817,6 +825,11 @@ $admin_management_link_visible = isset($_SESSION['superadmin_access']) && $_SESS
                         <div class="stat-label">Published Blogs</div>
                         <div class="stat-value"><?= $blog_count ?></div>
                         <div class="stat-meta">Live posts visible on blog page.</div>
+                    </article>
+                    <article class="stat-card">
+                        <div class="stat-label">Case Studies</div>
+                        <div class="stat-value"><?= $case_study_count ?></div>
+                        <div class="stat-meta">Live client success stories.</div>
                     </article>
                     <article class="stat-card">
                         <div class="stat-label">Total Orders</div>
@@ -1124,6 +1137,250 @@ $admin_management_link_visible = isset($_SESSION['superadmin_access']) && $_SESS
                                     <button type="button" class="btn-action" onclick="openNewBlog()">Clear</button>
                                 </div>
                                 <div id="saveStatusMessage" class="status-message"></div>
+                            </div>
+                        </div>
+                    </form>
+                <!-- Case Studies Management Section -->
+                <section class="section-card" id="case-studies">
+                    <div class="section-head">
+                        <h2>
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 0 0 3.61-4.96C19.08 10.63 21 8.55 21 6V5c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+                            Case Studies &amp; Success Stories
+                        </h2>
+                        <div style="display:flex; gap:0.6rem; align-items:center;">
+                            <span class="badge"><?= $case_study_count ?> total</span>
+                            <a href="/case-study.html" target="_blank" class="btn-action" style="font-size:0.82rem;">
+                                Public Case Study Page
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <?php if (!empty($case_studies)): ?>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Title &amp; Client</th>
+                                        <th>Category</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($case_studies as $cs): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($cs['id']) ?></td>
+                                            <td>
+                                                <strong style="color:var(--green-dark);"><?= htmlspecialchars($cs['title']) ?></strong>
+                                                <div style="color:var(--text-soft); font-size:0.8rem; font-family:monospace;">/case-study/<?= htmlspecialchars($cs['slug']) ?></div>
+                                                <?php if (!empty($cs['client_name'])): ?>
+                                                    <div style="font-size:0.8rem; color:var(--green-main); margin-top:2px;">
+                                                        <strong>Client:</strong> <?= htmlspecialchars($cs['client_name']) ?>
+                                                    </div>
+                                                <?php endif; ?>
+                                                <?php if (!empty($cs['keywords'])): ?>
+                                                    <div style="color:var(--text-soft); font-size:0.75rem; margin-top:2px;">
+                                                        <span style="font-weight:700;">Tags:</span> <?= htmlspecialchars($cs['keywords']) ?>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td><span class="badge"><?= htmlspecialchars($cs['category'] ?? 'Case Study') ?></span></td>
+                                            <td>
+                                                <span class="badge <?= ($cs['status'] ?? 'published') === 'published' ? 'badge-published' : 'badge-draft' ?>">
+                                                    <?= ucfirst(htmlspecialchars($cs['status'] ?? 'published')) ?>
+                                                </span>
+                                            </td>
+                                            <td style="white-space:nowrap;"><?= !empty($cs['created_at']) ? date('M d, Y', strtotime($cs['created_at'])) : '-' ?></td>
+                                            <td>
+                                                <div class="action-cell">
+                                                    <button type="button" class="btn-table-action btn-edit" onclick="editCaseStudy(<?= $cs['id'] ?>)">
+                                                        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                                                        Edit
+                                                    </button>
+                                                    <a href="/case-study/<?= htmlspecialchars($cs['slug']) ?>" target="_blank" class="btn-table-action btn-view">
+                                                        View
+                                                    </a>
+                                                    <form method="post" action="dashboard.php?action=delete_case_study&id=<?= $cs['id'] ?>" onsubmit="return confirm('Permanently delete case study: <?= addslashes($cs['title']) ?>?');" style="margin:0;">
+                                                        <button class="btn-table-action btn-delete" type="submit">Delete</button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php else: ?>
+                        <div class="empty-state">
+                            <strong>No case studies found</strong>
+                            Click "Create Case Study" to write your first client success story.
+                        </div>
+                    <?php endif; ?>
+                </section>
+
+                <!-- Full Interactive Case Study Editor -->
+                <section class="section-card" id="case-study-editor">
+                    <div class="section-head">
+                        <h2 id="csEditorHeading">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true"><path d="M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z"/></svg>
+                            Case Study Editor
+                        </h2>
+                        <button type="button" class="btn-action" onclick="openNewCaseStudy()">Reset to Blank Case Study</button>
+                    </div>
+
+                    <form id="caseStudyForm" onsubmit="saveCaseStudy(event)">
+                        <input type="hidden" id="csId" name="id" value="">
+                        <input type="hidden" id="csImagesJson" name="images_json" value="{}">
+
+                        <div class="editor-container">
+                            <!-- Basic Metadata Inputs -->
+                            <div class="form-row">
+                                <div class="form-group" style="flex:2;">
+                                    <label for="csTitle">Case Study Title *</label>
+                                    <input type="text" id="csTitle" class="form-input" placeholder="e.g. Scaling School ERP for 1,200+ Students" required oninput="handleCSTitleInput(this.value)">
+                                </div>
+                                <div class="form-group" style="flex:1;">
+                                    <label for="csSlug">URL Slug (Auto-generated)</label>
+                                    <input type="text" id="csSlug" class="form-input" placeholder="e.g. scaling-school-erp-1200-students">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="csClient">Client / Organization Name</label>
+                                    <input type="text" id="csClient" class="form-input" placeholder="e.g. Vidya Mandir Trust, Coastal Palms Resort">
+                                </div>
+                                <div class="form-group">
+                                    <label for="csCategory">Solution Category</label>
+                                    <input type="text" id="csCategory" class="form-input" list="categoryOptions" placeholder="e.g. School App Solution, Resort Tech">
+                                </div>
+                                <div class="form-group">
+                                    <label for="csAuthor">Author</label>
+                                    <input type="text" id="csAuthor" class="form-input" value="SmarTech Team">
+                                </div>
+                                <div class="form-group">
+                                    <label for="csStatus">Publication Status</label>
+                                    <select id="csStatus" class="form-select">
+                                        <option value="published">Published (Live on Website)</option>
+                                        <option value="draft">Draft (Private in Admin Panel)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group" style="flex:2;">
+                                    <label for="csMetaDesc">Short Description / SEO Excerpt</label>
+                                    <input type="text" id="csMetaDesc" class="form-input" placeholder="Brief summary of challenge, solution, and measurable business result...">
+                                </div>
+                                <div class="form-group" style="flex:1;">
+                                    <label for="csFeaturedImg">Featured Image URL (Banner)</label>
+                                    <input type="url" id="csFeaturedImg" class="form-input" placeholder="https://... (or leave blank to use attached image)" oninput="updateLiveCSPreview()">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group" style="flex:1;">
+                                    <label for="csKeywords">
+                                        SEO Keywords &amp; Tags
+                                        <span style="font-size:0.8rem; font-weight:normal; color:var(--text-soft);">(Comma-separated keywords)</span>
+                                    </label>
+                                    <input type="text" id="csKeywords" class="form-input" placeholder="school erp case study, resort digital booking, grampanchayat tax automation">
+                                </div>
+                            </div>
+
+                            <!-- Image Upload Section -->
+                            <div class="upload-section-box">
+                                <div class="upload-section-header">
+                                    <h3>
+                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                                        Upload Case Study Images (Auto-Generates Placeholders: {{ image_1 }}, {{ image_2 }}...)
+                                    </h3>
+                                </div>
+                                <p style="margin:0 0 0.8rem; color:var(--text-soft); font-size:0.88rem;">
+                                    Upload screenshots, architecture diagrams, or client photos. They will be auto-assigned image placeholders for insertion into the content.
+                                </p>
+                                <div class="drop-zone" id="csDropZone">
+                                    <input type="file" id="csImageFileInput" accept="image/*" style="display:none;" onchange="handleCSImageFiles(this.files)">
+                                    <svg viewBox="0 0 24 24" width="36" height="36" fill="var(--green-main)" style="margin-bottom:0.4rem;"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                                    <div style="font-weight:700; color:var(--green-dark);">Click to choose image or drag &amp; drop here</div>
+                                    <div style="font-size:0.8rem; color:var(--text-soft);">Supports JPG, PNG, WEBP, SVG</div>
+                                </div>
+                                <div class="attached-images-strip" id="csAttachedImagesStrip"></div>
+                            </div>
+
+                            <!-- Tabs: Editor vs Live Preview -->
+                            <div class="tab-header">
+                                <button type="button" class="tab-btn active" id="csTabEditorBtn" onclick="switchCSTab('editor')">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                                    Case Study Content
+                                </button>
+                                <button type="button" class="tab-btn" id="csTabPreviewBtn" onclick="switchCSTab('preview')">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                                    Live Preview
+                                </button>
+                            </div>
+
+                            <!-- Case Study Toolbar with Specialized Stat & Phase buttons -->
+                            <div class="formatting-toolbar" id="csEditorToolbar">
+                                <span class="toolbar-group-label">Case Study Blocks:</span>
+                                <button type="button" class="toolbar-btn" style="background:#e8f5e9; font-weight:800; color:var(--green-dark);" onclick="insertCSTag('stat')">+ Stat Card</button>
+                                <button type="button" class="toolbar-btn" style="background:#fef2f2; font-weight:800; color:#b91c1c;" onclick="insertCSTag('challenge')">+ Challenge</button>
+                                <button type="button" class="toolbar-btn" style="background:#f0fdf4; font-weight:800; color:#15803d;" onclick="insertCSTag('solution')">+ Solution</button>
+                                <button type="button" class="toolbar-btn" style="background:#ecfdf5; font-weight:800; color:#047857;" onclick="insertCSTag('results')">+ Results</button>
+
+                                <span class="toolbar-group-label" style="margin-left:0.5rem;">Headings:</span>
+                                <button type="button" class="toolbar-btn" onclick="insertCSTag('h1')">H1</button>
+                                <button type="button" class="toolbar-btn" onclick="insertCSTag('h2')">H2</button>
+                                <button type="button" class="toolbar-btn" onclick="insertCSTag('h3')">H3</button>
+
+                                <span class="toolbar-group-label">Format:</span>
+                                <button type="button" class="toolbar-btn" onclick="insertCSTag('bold')">Bold</button>
+                                <button type="button" class="toolbar-btn" onclick="insertCSTag('italic')">Italic</button>
+                                <button type="button" class="toolbar-btn" onclick="insertCSTag('bullet')">List</button>
+                                <button type="button" class="toolbar-btn" onclick="insertCSTag('quote')">Quote</button>
+                                <button type="button" class="toolbar-btn" onclick="insertCSTag('callout')">Callout</button>
+                                <button type="button" class="toolbar-btn" onclick="insertCSTag('tip')">Tip</button>
+                                <button type="button" class="toolbar-btn" onclick="insertCSTag('button')">Button</button>
+                                <button type="button" class="toolbar-btn" onclick="insertCSTag('divider')">Divider</button>
+                            </div>
+
+                            <!-- Textarea Editor -->
+                            <div id="csEditorViewWrap">
+                                <textarea id="csContent" class="form-textarea" placeholder="Write case study details using formatting tags and placeholders..." required oninput="updateLiveCSPreview()"></textarea>
+                            </div>
+
+                            <!-- Live Preview View -->
+                            <div id="csPreviewViewWrap" style="display:none;">
+                                <div class="preview-box">
+                                    <div class="preview-header">
+                                        <div class="preview-meta-row">
+                                            <span class="preview-category-badge" id="csPrevCategoryBadge">Technology</span>
+                                            <span id="csPrevDate">Today</span>
+                                        </div>
+                                        <h1 class="preview-title" id="csPrevTitle">Case Study Title Preview</h1>
+                                    </div>
+                                    <div id="csPrevBannerWrap" style="display:none; margin:1.5rem 0; border-radius:12px; overflow:hidden;">
+                                        <img id="csPrevBannerImg" src="" alt="Banner" style="width:100%; max-height:360px; object-fit:cover;">
+                                    </div>
+                                    <div class="preview-content-box" id="csPreviewRendered">
+                                        <p style="color:var(--text-soft); font-style:italic;">Type content above to see live preview...</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Editor Footer Action Bar -->
+                            <div class="editor-footer-bar">
+                                <div style="display:flex; align-items:center; gap:0.8rem;">
+                                    <button type="submit" class="btn-action btn-primary" id="saveCSBtn" style="padding:0.75rem 2rem; font-size:1rem;">
+                                        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                                        Save Case Study
+                                    </button>
+                                    <button type="button" class="btn-action" onclick="openNewCaseStudy()">Clear</button>
+                                </div>
+                                <div id="saveCSStatusMessage" class="status-message"></div>
                             </div>
                         </div>
                     </form>
@@ -1790,10 +2047,385 @@ $admin_management_link_visible = isset($_SESSION['superadmin_access']) && $_SESS
             document.getElementById('blog-editor').scrollIntoView({ behavior: 'smooth' });
         }
 
+        // =========================================================================
+        // CASE STUDY EDITOR JAVASCRIPT LOGIC
+        // =========================================================================
+        let attachedCSImages = {};
+
+        function renderAttachedCSImages() {
+            const strip = document.getElementById('csAttachedImagesStrip');
+            if (!strip) return;
+            strip.innerHTML = '';
+
+            const keys = Object.keys(attachedCSImages);
+            if (keys.length === 0) {
+                strip.style.display = 'none';
+                document.getElementById('csImagesJson').value = '{}';
+                return;
+            }
+
+            strip.style.display = 'grid';
+            keys.forEach(k => {
+                const url = attachedCSImages[k];
+                const card = document.createElement('div');
+                card.className = 'attached-img-card';
+                card.innerHTML = `
+                    <img src="${url}" alt="${k}">
+                    <div class="card-info">
+                        <strong>{{ ${k} }}</strong>
+                        <div style="font-size:0.75rem; color:var(--text-soft); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${url}</div>
+                        <div class="card-actions">
+                            <button type="button" class="btn-copy-tag" onclick="copyCSTag('{{ ${k} }}')">Copy Tag</button>
+                            <button type="button" class="btn-remove-img" onclick="removeCSImage('${k}')">Remove</button>
+                        </div>
+                    </div>
+                `;
+                strip.appendChild(card);
+            });
+
+            document.getElementById('csImagesJson').value = JSON.stringify(attachedCSImages);
+            updateLiveCSPreview();
+        }
+
+        function copyCSTag(tag) {
+            navigator.clipboard.writeText(tag).then(() => {
+                alert(`Placeholder tag copied: ${tag}\nPaste it into your case study content.`);
+            }).catch(() => {
+                prompt('Copy tag:', tag);
+            });
+        }
+
+        function removeCSImage(k) {
+            delete attachedCSImages[k];
+            renderAttachedCSImages();
+        }
+
+        function handleCSImageFiles(files) {
+            if (!files || files.length === 0) return;
+
+            Array.from(files).forEach(file => {
+                const formData = new FormData();
+                formData.append('image', file);
+
+                fetch('/api/case-study/upload-image', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.url) {
+                        let idx = 1;
+                        while (attachedCSImages['image_' + idx]) {
+                            idx++;
+                        }
+                        const placeholderKey = 'image_' + idx;
+                        attachedCSImages[placeholderKey] = data.url;
+                        renderAttachedCSImages();
+
+                        if (!document.getElementById('csFeaturedImg').value) {
+                            document.getElementById('csFeaturedImg').value = data.url;
+                            updateLiveCSPreview();
+                        }
+                    } else {
+                        alert(data.error || 'Failed to upload case study image.');
+                    }
+                })
+                .catch(err => {
+                    console.error('Upload error:', err);
+                    alert('Network error while uploading case study image.');
+                });
+            });
+        }
+
+        const csDropZone = document.getElementById('csDropZone');
+        if (csDropZone) {
+            csDropZone.addEventListener('click', () => {
+                document.getElementById('csImageFileInput').click();
+            });
+            csDropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                csDropZone.classList.add('dragover');
+            });
+            csDropZone.addEventListener('dragleave', () => {
+                csDropZone.classList.remove('dragover');
+            });
+            csDropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                csDropZone.classList.remove('dragover');
+                handleCSImageFiles(e.dataTransfer.files);
+            });
+        }
+
+        function handleCSTitleInput(val) {
+            const slugInput = document.getElementById('csSlug');
+            if (!slugInput.dataset.manual) {
+                slugInput.value = generateSlug(val);
+            }
+            updateLiveCSPreview();
+        }
+
+        const csSlugInput = document.getElementById('csSlug');
+        if (csSlugInput) {
+            csSlugInput.addEventListener('input', function() {
+                this.dataset.manual = 'true';
+            });
+        }
+
+        function insertCSTag(tag) {
+            const textarea = document.getElementById('csContent');
+            if (!textarea) return;
+
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const sel = textarea.value.substring(start, end);
+            let snippet = '';
+
+            switch(tag) {
+                case 'stat':
+                    snippet = `\n{{ stat: +150% | Metric Outcome Achieved }}\n`;
+                    break;
+                case 'challenge':
+                    snippet = `\n{{ challenge }}\n${sel || 'Describe the core institutional or business bottleneck...'}\n{{ /challenge }}\n`;
+                    break;
+                case 'solution':
+                    snippet = `\n{{ solution }}\n${sel || 'Describe the SmarTech architecture and implementation solution...'}\n{{ /solution }}\n`;
+                    break;
+                case 'results':
+                    snippet = `\n{{ results }}\n${sel || 'Detail measurable outcomes, efficiency gains, and ROI...'}\n{{ /results }}\n`;
+                    break;
+                case 'h1':
+                case 'h2':
+                case 'h3':
+                    snippet = `\n{{ ${tag}: ${sel || 'Section Title'} }}\n`;
+                    break;
+                case 'bold':
+                    snippet = `{{ bold }}${sel || 'important point'}{{ /bold }}`;
+                    break;
+                case 'italic':
+                    snippet = `{{ italic }}${sel || 'italicized note'}{{ /italic }}`;
+                    break;
+                case 'bullet':
+                    snippet = `\n{{ bullet }}${sel || 'Key milestone or feature'}{{ /bullet }}\n`;
+                    break;
+                case 'quote':
+                    snippet = `\n{{ quote }}\n${sel || 'Client testimonial or leadership quote...'}\n{{ /quote }}\n`;
+                    break;
+                case 'callout':
+                    snippet = `\n{{ callout: Deployment Milestone | ${sel || 'Highlight of deployment phase or certification.'} }}\n`;
+                    break;
+                case 'tip':
+                    snippet = `\n{{ tip }}${sel || 'Best practice discovered during implementation.'}{{ /tip }}\n`;
+                    break;
+                case 'button':
+                    snippet = `\n{{ button: Request Case Study Demo | /enquiry.html }}\n`;
+                    break;
+                case 'divider':
+                    snippet = `\n{{ divider }}\n`;
+                    break;
+                default:
+                    snippet = `{{ ${tag} }}${sel}{{ /${tag} }}`;
+            }
+
+            textarea.setRangeText(snippet, start, end, 'end');
+            textarea.focus();
+            updateLiveCSPreview();
+        }
+
+        function switchCSTab(tab) {
+            const btnEditor = document.getElementById('csTabEditorBtn');
+            const btnPrev = document.getElementById('csTabPreviewBtn');
+            const wrapEditor = document.getElementById('csEditorViewWrap');
+            const wrapPrev = document.getElementById('csPreviewViewWrap');
+            const toolbar = document.getElementById('csEditorToolbar');
+
+            if (tab === 'editor') {
+                btnEditor.classList.add('active');
+                btnPrev.classList.remove('active');
+                wrapEditor.style.display = 'block';
+                wrapPrev.style.display = 'none';
+                toolbar.style.display = 'flex';
+            } else {
+                btnEditor.classList.remove('active');
+                btnPrev.classList.add('active');
+                wrapEditor.style.display = 'none';
+                wrapPrev.style.display = 'block';
+                toolbar.style.display = 'none';
+                updateLiveCSPreview();
+            }
+        }
+
+        let csPreviewDebounceTimer = null;
+        function updateLiveCSPreview() {
+            clearTimeout(csPreviewDebounceTimer);
+            csPreviewDebounceTimer = setTimeout(() => {
+                const title = document.getElementById('csTitle')?.value || 'Case Study Title Preview';
+                const cat = document.getElementById('csCategory')?.value || 'Technology';
+                const banner = document.getElementById('csFeaturedImg')?.value || '';
+                const content = document.getElementById('csContent')?.value || '';
+
+                const prevTitle = document.getElementById('csPrevTitle');
+                const prevCat = document.getElementById('csPrevCategoryBadge');
+                const prevBannerWrap = document.getElementById('csPrevBannerWrap');
+                const prevBannerImg = document.getElementById('csPrevBannerImg');
+                const prevRendered = document.getElementById('csPreviewRendered');
+
+                if (prevTitle) prevTitle.innerText = title;
+                if (prevCat) prevCat.innerText = cat;
+
+                if (prevBannerWrap && prevBannerImg) {
+                    if (banner) {
+                        prevBannerImg.src = banner;
+                        prevBannerWrap.style.display = 'block';
+                    } else {
+                        prevBannerWrap.style.display = 'none';
+                    }
+                }
+
+                if (!content.trim()) {
+                    if (prevRendered) prevRendered.innerHTML = '<p style="color:var(--text-soft); font-style:italic;">Type content above to see live preview...</p>';
+                    return;
+                }
+
+                fetch('/api/case-study/preview', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        content: content,
+                        images_json: attachedCSImages
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.html) {
+                        if (prevRendered) prevRendered.innerHTML = data.html;
+                    }
+                })
+                .catch(err => {
+                    console.error('CS Preview error:', err);
+                });
+            }, 300);
+        }
+
+        function saveCaseStudy(e) {
+            e.preventDefault();
+            const btn = document.getElementById('saveCSBtn');
+            const statusMsg = document.getElementById('saveCSStatusMessage');
+
+            btn.disabled = true;
+            btn.innerText = 'Saving...';
+            statusMsg.className = 'status-message';
+            statusMsg.innerText = '';
+
+            const payload = {
+                id: document.getElementById('csId').value || null,
+                title: document.getElementById('csTitle').value,
+                slug: document.getElementById('csSlug').value,
+                client_name: document.getElementById('csClient').value,
+                category: document.getElementById('csCategory').value,
+                author: document.getElementById('csAuthor').value,
+                status: document.getElementById('csStatus').value,
+                meta_description: document.getElementById('csMetaDesc').value,
+                keywords: document.getElementById('csKeywords').value,
+                featured_image: document.getElementById('csFeaturedImg').value,
+                content: document.getElementById('csContent').value,
+                images_json: document.getElementById('csImagesJson').value
+            };
+
+            fetch('/api/case-study/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    statusMsg.className = 'status-message status-success';
+                    statusMsg.innerText = 'Case study saved successfully!';
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.php#case-studies';
+                        window.location.reload();
+                    }, 800);
+                } else {
+                    statusMsg.className = 'status-message status-error';
+                    statusMsg.innerText = data.error || 'Failed to save case study.';
+                }
+            })
+            .catch(err => {
+                console.error('CS save error:', err);
+                statusMsg.className = 'status-message status-error';
+                statusMsg.innerText = 'Network error saving case study.';
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerText = 'Save Case Study';
+            });
+        }
+
+        function editCaseStudy(id) {
+            fetch('/api/case-study/get?id=' + id)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.case_study) {
+                    const c = data.case_study;
+                    document.getElementById('csId').value = c.id;
+                    document.getElementById('csTitle').value = c.title || '';
+                    document.getElementById('csSlug').value = c.slug || '';
+                    document.getElementById('csClient').value = c.client_name || '';
+                    document.getElementById('csCategory').value = c.category || 'Technology';
+                    document.getElementById('csAuthor').value = c.author || 'SmarTech Team';
+                    document.getElementById('csStatus').value = c.status || 'published';
+                    document.getElementById('csMetaDesc').value = c.meta_description || '';
+                    document.getElementById('csKeywords').value = c.keywords || '';
+                    document.getElementById('csFeaturedImg').value = c.featured_image || '';
+                    document.getElementById('csContent').value = c.content || '';
+
+                    try {
+                        attachedCSImages = typeof c.images_json === 'string' ? JSON.parse(c.images_json) : (c.images_json || {});
+                    } catch(e) {
+                        attachedCSImages = {};
+                    }
+                    renderAttachedCSImages();
+
+                    document.getElementById('csEditorHeading').innerHTML = `
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                        Editing Case Study #${c.id}: ${escapeHtml(c.title)}
+                    `;
+
+                    updateLiveCSPreview();
+                    document.getElementById('case-study-editor').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    alert('Could not fetch case study details.');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Error loading case study.');
+            });
+        }
+
+        function openNewCaseStudy() {
+            document.getElementById('caseStudyForm').reset();
+            document.getElementById('csId').value = '';
+            document.getElementById('csKeywords').value = '';
+            document.getElementById('csSlug').dataset.manual = '';
+            attachedCSImages = {};
+            renderAttachedCSImages();
+            document.getElementById('csEditorHeading').innerHTML = `
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                Create New Case Study
+            `;
+            document.getElementById('csAuthor').value = 'SmarTech Team';
+            document.getElementById('saveCSStatusMessage').innerText = '';
+            updateLiveCSPreview();
+            document.getElementById('case-study-editor').scrollIntoView({ behavior: 'smooth' });
+        }
+
         // Initial preview render on page load
         window.addEventListener('DOMContentLoaded', () => {
             renderAttachedImages();
             updateLivePreview();
+            renderAttachedCSImages();
+            updateLiveCSPreview();
         });
     </script>
 </body>
