@@ -28,10 +28,22 @@ $shareUrl = $post ? 'https://smartechsolutions.in/blog/' . htmlspecialchars($pos
 <html lang="en">
 
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V67RXH5F50"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-V67RXH5F50');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $post ? htmlspecialchars($post['title']) . ' | SmarTech Solutions' : 'Article Not Found | SmarTech Solutions' ?></title>
     <meta name="description" content="<?= $post ? htmlspecialchars($post['meta_description'] ?: substr(strip_tags($post['content']), 0, 160)) : 'Article on SmarTech Solutions' ?>">
+    <?php if ($post && !empty($post['keywords'])): ?>
+    <meta name="keywords" content="<?= htmlspecialchars($post['keywords']) ?>">
+    <?php endif; ?>
     <meta name="author" content="<?= $post ? htmlspecialchars($post['author'] ?: 'SmarTech Team') : 'SmarTech Solutions' ?>">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <link rel="canonical" href="<?= $shareUrl ?>">
@@ -60,6 +72,9 @@ $shareUrl = $post ? 'https://smartechsolutions.in/blog/' . htmlspecialchars($pos
         "@type": "BlogPosting",
         "headline": "<?= addslashes($post['title']) ?>",
         "description": "<?= addslashes($post['meta_description'] ?: '') ?>",
+        <?php if (!empty($post['keywords'])): ?>
+        "keywords": "<?= addslashes($post['keywords']) ?>",
+        <?php endif; ?>
         "image": "<?= addslashes($post['featured_image'] ?: 'https://smartechsolutions.in/assets/smarttechlogo.png') ?>",
         "author": {
             "@type": "Organization",
@@ -433,6 +448,61 @@ $shareUrl = $post ? 'https://smartechsolutions.in/blog/' . htmlspecialchars($pos
             margin: 2.8rem 0;
         }
 
+        /* --- Keywords & Tags Section --- */
+        .article-tags-wrap {
+            margin-top: 2.2rem;
+            padding-top: 1.8rem;
+            border-top: 1px dashed rgba(34, 139, 34, 0.16);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .tags-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--green-dark);
+        }
+
+        .tags-label svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--green-main);
+            flex-shrink: 0;
+        }
+
+        .tags-list {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            background: #eef8ee;
+            color: var(--green-dark);
+            border: 1px solid rgba(34, 139, 34, 0.2);
+            border-radius: 999px;
+            padding: 0.35rem 0.85rem;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .tag-pill:hover {
+            background: var(--green-main);
+            color: var(--white);
+            border-color: var(--green-main);
+            transform: translateY(-1px);
+        }
+
         /* --- Social Share Bar --- */
         .share-section {
             margin-top: 3rem;
@@ -694,6 +764,25 @@ $shareUrl = $post ? 'https://smartechsolutions.in/blog/' . htmlspecialchars($pos
                     <div class="article-content">
                         <?= parseBlogPlaceholders($renderedContent, $post['images_json']) ?>
                     </div>
+
+                    <!-- SEO Keywords / Tags Pills -->
+                    <?php if (!empty($post['keywords'])): 
+                        $keywordsArr = array_filter(array_map('trim', explode(',', $post['keywords'])));
+                    ?>
+                        <?php if (!empty($keywordsArr)): ?>
+                            <div class="article-tags-wrap">
+                                <span class="tags-label">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/></svg>
+                                    Keywords &amp; Tags:
+                                </span>
+                                <div class="tags-list">
+                                    <?php foreach ($keywordsArr as $kw): ?>
+                                        <a href="/blog.html?q=<?= urlencode($kw) ?>" class="tag-pill" title="View articles tagged with <?= htmlspecialchars($kw) ?>">#<?= htmlspecialchars($kw) ?></a>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    <?php endif; ?>
 
                     <!-- Social Sharing Section -->
                     <section class="share-section">

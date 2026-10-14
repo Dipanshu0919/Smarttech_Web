@@ -60,6 +60,7 @@ function initDatabaseTables($pdo, $is_sqlite = false) {
                 title TEXT NOT NULL,
                 slug TEXT UNIQUE NOT NULL,
                 meta_description TEXT,
+                keywords TEXT DEFAULT '',
                 author TEXT DEFAULT 'SmarTech Team',
                 category TEXT DEFAULT 'Technology',
                 featured_image TEXT,
@@ -70,6 +71,14 @@ function initDatabaseTables($pdo, $is_sqlite = false) {
                 updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
             );
         ");
+
+        try {
+            $cols = $pdo->query("PRAGMA table_info(blogs)")->fetchAll();
+            $colNames = array_column($cols, 'name');
+            if (!in_array('keywords', $colNames)) {
+                $pdo->exec("ALTER TABLE blogs ADD COLUMN keywords TEXT DEFAULT ''");
+            }
+        } catch (Exception $e) {}
     } else {
         $pdo->exec("
             CREATE TABLE IF NOT EXISTS users (
@@ -102,6 +111,7 @@ function initDatabaseTables($pdo, $is_sqlite = false) {
                 title VARCHAR(255) NOT NULL,
                 slug VARCHAR(255) UNIQUE NOT NULL,
                 meta_description TEXT,
+                keywords TEXT,
                 author VARCHAR(100) DEFAULT 'SmarTech Team',
                 category VARCHAR(100) DEFAULT 'Technology',
                 featured_image VARCHAR(255),

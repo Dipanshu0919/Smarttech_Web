@@ -8,6 +8,15 @@ $blogs = get_all_blogs(true); // Fetch published blogs
 <html lang="en">
 
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V67RXH5F50"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-V67RXH5F50');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog & Tech Insights | SmarTech Solutions Thane</title>
@@ -360,6 +369,24 @@ $blogs = get_all_blogs(true); // Fetch published blogs
             overflow: hidden;
         }
 
+        .card-keywords-row {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            margin-top: 0.2rem;
+        }
+
+        .card-keyword-pill {
+            font-size: 0.74rem;
+            color: var(--green-main);
+            background: rgba(34, 139, 34, 0.08);
+            border: 1px solid rgba(34, 139, 34, 0.12);
+            padding: 0.18rem 0.55rem;
+            border-radius: 999px;
+            font-weight: 700;
+        }
+
         .blog-card-footer {
             margin-top: 0.5rem;
             padding-top: 1rem;
@@ -491,7 +518,7 @@ $blogs = get_all_blogs(true); // Fetch published blogs
                         $postUrl = '/blog/' . $postSlug;
                         $featuredImg = $post['featured_image'] ?? '';
                     ?>
-                        <article class="blog-card" data-category="<?= htmlspecialchars($post['category'] ?? 'Technology') ?>" data-title="<?= htmlspecialchars(strtolower($post['title'])) ?>">
+                        <article class="blog-card" data-category="<?= htmlspecialchars($post['category'] ?? 'Technology') ?>" data-title="<?= htmlspecialchars(strtolower($post['title'])) ?>" data-keywords="<?= htmlspecialchars(strtolower($post['keywords'] ?? '')) ?>">
                             <div class="blog-card-media">
                                 <?php if (!empty($featuredImg)): ?>
                                     <img src="<?= htmlspecialchars($featuredImg) ?>" alt="<?= htmlspecialchars($post['title']) ?>" loading="lazy">
@@ -517,6 +544,15 @@ $blogs = get_all_blogs(true); // Fetch published blogs
                                 <p class="blog-card-desc">
                                     <?= htmlspecialchars($post['meta_description'] ?: substr(strip_tags($post['content']), 0, 160) . '...') ?>
                                 </p>
+                                <?php if (!empty($post['keywords'])): 
+                                    $cardKws = array_slice(array_filter(array_map('trim', explode(',', $post['keywords']))), 0, 3);
+                                ?>
+                                    <div class="card-keywords-row">
+                                        <?php foreach ($cardKws as $ckw): ?>
+                                            <span class="card-keyword-pill">#<?= htmlspecialchars($ckw) ?></span>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
                                 <div class="blog-card-footer">
                                     <div class="author-info">
                                         <span><?= htmlspecialchars($post['author'] ?: 'SmarTech Team') ?></span>
@@ -559,8 +595,9 @@ $blogs = get_all_blogs(true); // Fetch published blogs
                 blogCards.forEach(card => {
                     const cardCategory = card.getAttribute('data-category') || '';
                     const cardTitle = card.getAttribute('data-title') || '';
+                    const cardKeywords = card.getAttribute('data-keywords') || '';
                     const categoryMatches = (currentCategory === 'all' || cardCategory.toLowerCase() === currentCategory.toLowerCase());
-                    const searchMatches = (!query || cardTitle.includes(query) || card.textContent.toLowerCase().includes(query));
+                    const searchMatches = (!query || cardTitle.includes(query) || cardKeywords.includes(query) || card.textContent.toLowerCase().includes(query));
 
                     if (categoryMatches && searchMatches) {
                         card.style.display = 'flex';
@@ -582,6 +619,14 @@ $blogs = get_all_blogs(true); // Fetch published blogs
 
             if (searchInput) {
                 searchInput.addEventListener('input', applyFilter);
+            }
+
+            // Auto-filter if arriving from a tag pill with ?q=... or ?tag=...
+            const urlParams = new URLSearchParams(window.location.search);
+            const queryParam = urlParams.get('q') || urlParams.get('tag');
+            if (queryParam && searchInput) {
+                searchInput.value = queryParam;
+                applyFilter();
             }
         })();
     </script>

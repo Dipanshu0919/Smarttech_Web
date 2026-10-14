@@ -22,6 +22,15 @@ $admin_management_link_visible = isset($_SESSION['superadmin_access']) && $_SESS
 <html lang="en">
 
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V67RXH5F50"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-V67RXH5F50');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | SmarTech Solutions</title>
@@ -868,6 +877,11 @@ $admin_management_link_visible = isset($_SESSION['superadmin_access']) && $_SESS
                                             <td>
                                                 <strong style="color:var(--green-dark);"><?= htmlspecialchars($b['title']) ?></strong>
                                                 <div style="color:var(--text-soft); font-size:0.8rem; font-family:monospace;">/blog/<?= htmlspecialchars($b['slug']) ?></div>
+                                                <?php if (!empty($b['keywords'])): ?>
+                                                    <div style="color:var(--text-soft); font-size:0.75rem; margin-top:3px; word-break:break-word;">
+                                                        <span style="font-weight:700; color:var(--green-main);">Tags:</span> <?= htmlspecialchars($b['keywords']) ?>
+                                                    </div>
+                                                <?php endif; ?>
                                             </td>
                                             <td><span class="badge"><?= htmlspecialchars($b['category'] ?? 'General') ?></span></td>
                                             <td><?= htmlspecialchars($b['author'] ?: 'SmarTech Team') ?></td>
@@ -964,6 +978,16 @@ $admin_management_link_visible = isset($_SESSION['superadmin_access']) && $_SESS
                                 <div class="form-group" style="flex:1;">
                                     <label for="postFeaturedImg">Featured Image URL (Banner)</label>
                                     <input type="url" id="postFeaturedImg" class="form-input" placeholder="https://... (or leave blank to use attached image)" oninput="updateLivePreview()">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group" style="flex:1;">
+                                    <label for="postKeywords">
+                                        SEO Keywords &amp; Tags
+                                        <span style="font-size:0.8rem; font-weight:normal; color:var(--text-soft);">(Comma-separated keywords, e.g. school erp, resort software, maharashtra, grampanchayat)</span>
+                                    </label>
+                                    <input type="text" id="postKeywords" class="form-input" placeholder="school erp, education management, smart school, student attendance, fees software">
                                 </div>
                             </div>
 
@@ -1670,6 +1694,7 @@ $admin_management_link_visible = isset($_SESSION['superadmin_access']) && $_SESS
                 author: document.getElementById('postAuthor').value,
                 status: document.getElementById('postStatus').value,
                 meta_description: document.getElementById('postMetaDesc').value,
+                keywords: document.getElementById('postKeywords').value,
                 featured_image: document.getElementById('postFeaturedImg').value,
                 content: document.getElementById('postContent').value,
                 images_json: document.getElementById('blogImagesJson').value
@@ -1719,6 +1744,7 @@ $admin_management_link_visible = isset($_SESSION['superadmin_access']) && $_SESS
                     document.getElementById('postAuthor').value = b.author || 'SmarTech Team';
                     document.getElementById('postStatus').value = b.status || 'published';
                     document.getElementById('postMetaDesc').value = b.meta_description || '';
+                    document.getElementById('postKeywords').value = b.keywords || '';
                     document.getElementById('postFeaturedImg').value = b.featured_image || '';
                     document.getElementById('postContent').value = b.content || '';
 
@@ -1750,6 +1776,7 @@ $admin_management_link_visible = isset($_SESSION['superadmin_access']) && $_SESS
         function openNewBlog() {
             document.getElementById('blogPostForm').reset();
             document.getElementById('blogId').value = '';
+            document.getElementById('postKeywords').value = '';
             document.getElementById('postSlug').dataset.manual = '';
             attachedImages = {};
             renderAttachedImages();

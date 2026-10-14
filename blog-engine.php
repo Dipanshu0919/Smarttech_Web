@@ -237,6 +237,7 @@ function save_blog_post($data) {
     $author = trim($data['author'] ?? 'SmarTech Team') ?: 'SmarTech Team';
     $category = trim($data['category'] ?? 'Technology') ?: 'Technology';
     $meta_description = trim($data['meta_description'] ?? '');
+    $keywords = trim($data['keywords'] ?? '');
     $featured_image = trim($data['featured_image'] ?? '');
     $content = trim($data['content'] ?? '');
     $images_json = is_array($data['images_json'] ?? null) ? json_encode($data['images_json']) : ($data['images_json'] ?? '{}');
@@ -256,17 +257,17 @@ function save_blog_post($data) {
     if ($id) {
         $stmt = $db->prepare("
             UPDATE blogs 
-            SET title = ?, slug = ?, meta_description = ?, author = ?, category = ?, featured_image = ?, content = ?, images_json = ?, status = ?, updated_at = ?
+            SET title = ?, slug = ?, meta_description = ?, keywords = ?, author = ?, category = ?, featured_image = ?, content = ?, images_json = ?, status = ?, updated_at = ?
             WHERE id = ?
         ");
-        $stmt->execute([$title, $slug, $meta_description, $author, $category, $featured_image, $content, $images_json, $status, $now, $id]);
+        $stmt->execute([$title, $slug, $meta_description, $keywords, $author, $category, $featured_image, $content, $images_json, $status, $now, $id]);
         return $id;
     } else {
         $stmt = $db->prepare("
-            INSERT INTO blogs (title, slug, meta_description, author, category, featured_image, content, images_json, status, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO blogs (title, slug, meta_description, keywords, author, category, featured_image, content, images_json, status, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
-        $stmt->execute([$title, $slug, $meta_description, $author, $category, $featured_image, $content, $images_json, $status, $now, $now]);
+        $stmt->execute([$title, $slug, $meta_description, $keywords, $author, $category, $featured_image, $content, $images_json, $status, $now, $now]);
         return $db->lastInsertId();
     }
 }
