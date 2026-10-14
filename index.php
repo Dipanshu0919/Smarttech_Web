@@ -125,8 +125,14 @@ function send_json($data, $status = 200) {
     exit;
 }
 
-$request_uri = $_SERVER['REQUEST_URI'];
-$request_method = $_SERVER['REQUEST_METHOD'];
+// If index.php is included by another script (e.g. dashboard.php, admin-blogs.php),
+// only export helper functions and do not run the front-controller router.
+if (!empty(debug_backtrace())) {
+    return;
+}
+
+$request_uri = $_SERVER['REQUEST_URI'] ?? '/';
+$request_method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $path = $_GET['path'] ?? parse_url($request_uri, PHP_URL_PATH);
 
 // Normalize path - remove /smart/ prefix if present and redirect index.php to /
@@ -561,23 +567,25 @@ if ($path === '/dashboard.php' && ($_GET['action'] ?? '') === 'delete_enquiry') 
     exit;
 }
 
-if ($path === '/dashboard.php' && ($_GET['action'] ?? '') === 'delete_blog') {
+if (($path === '/dashboard.php' || $path === '/admin-blogs.php') && ($_GET['action'] ?? '') === 'delete_blog') {
     $blog_id = $_GET['id'] ?? 0;
     if ($blog_id) {
         adminRequired();
         delete_blog_post($blog_id);
     }
-    header('Location: dashboard.php#blogs');
+    $target = ($path === '/admin-blogs.php') ? 'admin-blogs.php' : 'dashboard.php#blogs';
+    header('Location: ' . $target);
     exit;
 }
 
-if ($path === '/dashboard.php' && ($_GET['action'] ?? '') === 'delete_case_study') {
+if (($path === '/dashboard.php' || $path === '/admin-case-studies.php') && ($_GET['action'] ?? '') === 'delete_case_study') {
     $cs_id = $_GET['id'] ?? 0;
     if ($cs_id) {
         adminRequired();
         delete_case_study($cs_id);
     }
-    header('Location: dashboard.php#case-studies');
+    $target = ($path === '/admin-case-studies.php') ? 'admin-case-studies.php' : 'dashboard.php#case-studies';
+    header('Location: ' . $target);
     exit;
 }
 
@@ -698,6 +706,12 @@ $static_routes = [
     '/sitemap.xml' => 'sitemap.xml',
     '/dashboard.html' => 'dashboard.php',
     '/dashboard.php' => 'dashboard.php',
+    '/admin-blogs' => 'admin-blogs.php',
+    '/admin-blogs.html' => 'admin-blogs.php',
+    '/admin-blogs.php' => 'admin-blogs.php',
+    '/admin-case-studies' => 'admin-case-studies.php',
+    '/admin-case-studies.html' => 'admin-case-studies.php',
+    '/admin-case-studies.php' => 'admin-case-studies.php',
     '/blog' => 'blog.php',
     '/blog.html' => 'blog.php',
     '/blog.php' => 'blog.php',
